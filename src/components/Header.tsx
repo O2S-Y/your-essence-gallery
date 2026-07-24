@@ -1,39 +1,36 @@
-import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/projects", label: "Projects" },
-  { to: "/skills", label: "Skills" },
-  { to: "/contact", label: "Contact" },
+  { href: "/#about", label: "About" },
+  { href: "/#projects", label: "Projects" },
+  { href: "/#skills", label: "Skills" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link
-          to="/"
+        <a
+          href="/"
           className="font-heading text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
         >
           Oussama Yinssi
-        </Link>
+        </a>
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              activeProps={{ className: "text-primary font-medium" }}
-              inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
-              className="font-body text-sm transition-colors"
+            <a
+              key={link.href}
+              href={link.href}
+              className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
@@ -53,16 +50,14 @@ export function Header() {
         <div className="border-t border-border bg-background px-4 py-4 md:hidden">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
+              <a
+                key={link.href}
+                href={link.href}
                 onClick={() => setMobileOpen(false)}
-                activeProps={{ className: "text-primary font-medium" }}
-                inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
-                className="text-base transition-colors"
+                className="text-base text-muted-foreground transition-colors hover:text-foreground"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </nav>
         </div>
