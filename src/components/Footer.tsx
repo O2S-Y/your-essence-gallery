@@ -5,37 +5,52 @@ const currentYear = new Date().getFullYear();
 export function Footer() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6 lg:px-8">
-        <p className="text-sm text-muted-foreground">
-          © {currentYear} Oussama Yinssi. All rights reserved.
-        </p>
-        <div className="flex items-center gap-4">
-          <a
-            href="https://www.linkedin.com/in/oussama-yinssi-328396228/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            className="text-muted-foreground transition-colors hover:text-primary"
-          >
-            <Linkedin className="h-5 w-5" />
-          </a>
-          <a
-            href="https://github.com/O2S-Y"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="text-muted-foreground transition-colors hover:text-primary"
-          >
-            <Github className="h-5 w-5" />
-          </a>
+      <div className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-6 pb-8">
           <a
             href="mailto:oussamayinssi@gmail.com"
-            aria-label="Email"
-            className="text-muted-foreground transition-colors hover:text-primary"
+            className="font-body text-sm text-muted-foreground transition-colors hover:text-primary"
           >
-            <Mail className="h-5 w-5" />
+            oussamayinssi@gmail.com
           </a>
+          <div className="flex items-center gap-5">
+            <a
+              href="https://www.linkedin.com/in/oussama-yinssi-328396228/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+            <a
+              href="https://github.com/O2S-Y"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+            <a
+              href="mailto:oussamayinssi@gmail.com"
+              aria-label="Email"
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Mail className="h-5 w-5" />
+            </a>
+          </div>
         </div>
+
+        <div className="overflow-hidden">
+          <p className="select-none whitespace-nowrap text-center font-heading font-bold leading-[0.85] tracking-tight text-foreground [font-size:clamp(3.5rem,19vw,17rem)]">
+            Ou<span className="text-primary">2</span>Sama
+          </p>
+        </div>
+
+        <p className="border-t border-border py-6 text-center text-xs text-muted-foreground">
+          © {currentYear} Oussama Yinssi · Data Science & AI
+        </p>
       </div>
     </footer>
   );
