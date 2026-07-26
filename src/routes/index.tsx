@@ -393,7 +393,7 @@ function SkillWave({ skills }: { skills: string[] }) {
         aria-hidden="true"
         viewBox="0 0 1200 220"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-0 h-full w-full text-primary/60"
+        className="pointer-events-none absolute inset-x-0 top-1/2 h-[78%] w-full -translate-y-1/2 text-primary/60"
       >
         <path
           d="M0,130 C60,60 130,58 190,112 C250,166 300,178 360,126 C420,74 486,66 546,120 C606,174 660,182 720,128 C780,74 846,68 906,122 C966,176 1024,180 1084,124 C1130,80 1168,74 1200,104"
