@@ -39,12 +39,20 @@ export function Header() {
         <a
           href="/"
           className={cn(
-            "font-heading font-semibold tracking-tight text-foreground transition-all hover:text-primary",
-            scrolled ? "text-base" : "text-xl",
+            "font-display tracking-tight text-foreground transition-all hover:text-primary",
+            scrolled ? "text-lg" : "text-2xl",
           )}
         >
-          {scrolled ? "Ou2Sama" : "Oussama Yinssi"}
+          {scrolled ? (
+            <>
+              Ou<span className="[letter-spacing:-0.06em]">2</span>
+              <span className="[margin-left:-0.04em]">Sama</span>
+            </>
+          ) : (
+            "Oussama Yinssi"
+          )}
         </a>
+
 
         <nav
           className={cn(
