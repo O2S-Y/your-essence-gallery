@@ -65,14 +65,16 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="relative z-10 flex flex-col">
       <HeroAbout />
       <ProjectsSection />
       <SkillsSection />
+      <AwardsSection />
       <ContactSection />
     </div>
   );
 }
+
 
 /* ---------------- Hero + About (Bauhaus composition) ---------------- */
 
