@@ -484,32 +484,69 @@ function ContactSection() {
   };
 
   return (
-    <section id="contact" className="border-t border-border bg-secondary/40 py-24">
+    <section id="contact" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 max-w-2xl">
-          <p className="font-body text-xs uppercase tracking-[0.25em] text-primary">
-            Say hello
-          </p>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-foreground sm:text-4xl">
-            Get in Touch
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Have a project, opportunity, or question? Send a message and I'll respond soon.
-          </p>
-        </div>
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Get in touch
+        </p>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <a
+          href={`mailto:${profile.email}?subject=Hello%20Oussama`}
+          className="group mt-4 block font-display leading-[0.92] tracking-tight text-foreground transition-colors hover:text-primary [font-size:clamp(2.75rem,10vw,7rem)]"
+        >
+          <span className="block">Say hi!</span>
+          <span className="block">
+            Let&apos;s talk{" "}
+            <span className="inline-block transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">
+              ↗
+            </span>
+          </span>
+        </a>
+
+        <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+          <div className="space-y-2 font-body text-sm text-muted-foreground">
+            <a
+              href={`mailto:${profile.email}`}
+              className="block transition-colors hover:text-primary"
+            >
+              {profile.email}
+            </a>
+            <p>{profile.location}</p>
+            <div className="flex flex-wrap gap-5 pt-4 font-body text-xs uppercase tracking-[0.2em]">
+              <a
+                href={`mailto:${profile.email}`}
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
+              >
+                <Mail className="h-3.5 w-3.5" /> Email
+              </a>
+              <a
+                href={profile.linkedIn}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
+              >
+                <Linkedin className="h-3.5 w-3.5" /> LinkedIn
+              </a>
+              <a
+                href={profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
+              >
+                <Github className="h-3.5 w-3.5" /> GitHub
+              </a>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">
-                Name
-              </label>
               <input
                 id="name"
                 type="text"
                 placeholder="Your name"
+                aria-label="Name"
                 {...register("name")}
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
@@ -517,15 +554,13 @@ function ContactSection() {
             </div>
 
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
-                Email
-              </label>
               <input
                 id="email"
                 type="email"
                 placeholder="you@example.com"
+                aria-label="Email"
                 {...register("email")}
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
@@ -533,15 +568,13 @@ function ContactSection() {
             </div>
 
             <div>
-              <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground">
-                Message
-              </label>
               <textarea
                 id="message"
-                rows={6}
+                rows={4}
                 placeholder="Tell me about your project or question..."
+                aria-label="Message"
                 {...register("message")}
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full resize-none border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
               />
               {errors.message && (
                 <p className="mt-1 text-sm text-destructive">{errors.message.message}</p>
@@ -557,51 +590,9 @@ function ContactSection() {
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
-
-          <div className="space-y-6">
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h3 className="font-heading text-xl font-semibold text-foreground">
-                Contact information
-              </h3>
-              <div className="mt-6 space-y-4">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Mail className="h-5 w-5" />
-                  {profile.email}
-                </a>
-                <a
-                  href={profile.linkedIn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Linkedin className="h-5 w-5" />
-                  LinkedIn
-                </a>
-                <a
-                  href={profile.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Github className="h-5 w-5" />
-                  GitHub
-                </a>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h3 className="font-heading text-xl font-semibold text-foreground">Availability</h3>
-              <p className="mt-4 text-muted-foreground">
-                Currently open for internships, freelance projects, and collaborations in
-                data science, machine learning, and big data engineering.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
   );
 }
+
