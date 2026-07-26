@@ -1,33 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/#about", label: "About" },
-  { href: "/#projects", label: "Projects" },
+  { href: "/#projects", label: "Work" },
   { href: "/#skills", label: "Skills" },
   { href: "/#contact", label: "Contact" },
 ];
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-40 w-full transition-all duration-500",
+        scrolled ? "px-3 pt-3 sm:px-6" : "px-0 pt-0",
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto flex items-center justify-between transition-all duration-500",
+          scrolled
+            ? "h-14 max-w-3xl rounded-full border border-border bg-card/90 px-5 shadow-lg backdrop-blur-md"
+            : "h-16 max-w-6xl rounded-none border-b border-border bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8",
+        )}
+      >
         <a
           href="/"
-          className="font-heading text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
+          className={cn(
+            "font-heading font-semibold tracking-tight text-foreground transition-all hover:text-primary",
+            scrolled ? "text-base" : "text-xl",
+          )}
         >
-          Oussama Yinssi
+          {scrolled ? "Ou2Sama" : "Oussama Yinssi"}
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav
+          className={cn(
+            "hidden items-center transition-all duration-500 md:flex",
+            scrolled ? "gap-6" : "gap-8",
+          )}
+        >
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(
+                "font-body text-muted-foreground transition-colors hover:text-foreground",
+                scrolled
+                  ? "text-xs uppercase tracking-[0.15em]"
+                  : "text-sm",
+              )}
             >
               {link.label}
             </a>
@@ -47,7 +81,14 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-border bg-background px-4 py-4 md:hidden">
+        <div
+          className={cn(
+            "mx-auto bg-card px-4 py-4 md:hidden",
+            scrolled
+              ? "mt-2 max-w-3xl rounded-2xl border border-border shadow-lg"
+              : "max-w-full border-b border-border",
+          )}
+        >
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <a

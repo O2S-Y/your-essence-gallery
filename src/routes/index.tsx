@@ -213,59 +213,60 @@ function BauhausAbout() {
   );
 }
 
-/* ---------------- Projects ---------------- */
+/* ---------------- Projects (editorial rows) ---------------- */
 
 function ProjectsSection() {
   return (
-    <section id="projects" className="border-t border-border bg-secondary/40 py-24">
+    <section id="projects" className="border-t border-border py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl">
-            <p className="font-body text-xs uppercase tracking-[0.25em] text-primary">
-              Selected work
-            </p>
-            <h2 className="mt-3 font-heading text-3xl font-bold text-foreground sm:text-4xl">
-              Projects
-            </h2>
-            <p className="mt-3 text-muted-foreground">
-              A selection across machine learning, big data engineering, and NLP.
-            </p>
-          </div>
-        </div>
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Selected projects
+        </p>
+        <h2 className="mt-3 font-heading text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+          Work
+        </h2>
+        <div className="mt-8 border-t border-border" />
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+        <div className="mt-8 space-y-6">
+          {projects.map((project, index) => (
             <article
               key={project.slug}
-              className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-md"
+              className="group grid grid-cols-1 overflow-hidden rounded-2xl bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
             >
-              <div className="flex h-40 items-center justify-center bg-gradient-to-br from-secondary to-background p-6">
-                <span className="font-heading text-3xl font-bold text-primary/40">
-                  {project.title.charAt(0)}
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="font-heading text-xl font-semibold text-foreground">
+              <div className="flex flex-col justify-center p-7 sm:p-10">
+                <div className="flex items-center gap-3 font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <span className="h-px w-8 bg-border" />
+                  <span>{project.tags[0]}</span>
+                </div>
+                <h3 className="mt-5 font-heading text-2xl font-bold leading-snug text-foreground sm:text-3xl">
                   {project.title}
                 </h3>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground">
-                  {project.shortDescription}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {project.tags.slice(0, 3).map((tag) => (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {project.tags.slice(1, 4).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground"
+                      className="rounded-full border border-border px-3 py-1 font-body text-xs text-muted-foreground"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="mt-6 flex items-center gap-4">
+                <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {project.outcomes.slice(0, 2).map((outcome) => (
+                    <p
+                      key={outcome}
+                      className="font-body text-sm leading-relaxed text-muted-foreground"
+                    >
+                      {outcome}
+                    </p>
+                  ))}
+                </div>
+                <div className="mt-8 flex items-center gap-5">
                   <Link
                     to="/projects/$slug"
                     params={{ slug: project.slug }}
-                    className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                    className="inline-flex items-center gap-1 font-body text-sm font-medium text-primary transition-colors hover:text-primary/80"
                   >
                     View case study
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -275,13 +276,27 @@ function ProjectsSection() {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      className="inline-flex items-center gap-1 font-body text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       GitHub
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   )}
                 </div>
+              </div>
+
+              <div
+                className="relative min-h-[220px] overflow-hidden md:min-h-[320px]"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--sage-400), var(--sage-700))",
+                }}
+              >
+                <span className="absolute -bottom-10 -right-4 font-heading text-[11rem] font-bold leading-none text-background/25">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="absolute left-8 top-8 h-24 w-24 rounded-full bg-background/20" />
+                <span className="absolute bottom-10 left-16 h-16 w-40 rounded-t-full bg-background/15" />
               </div>
             </article>
           ))}
@@ -291,124 +306,96 @@ function ProjectsSection() {
   );
 }
 
-/* ---------------- Skills ---------------- */
+/* ---------------- Skills / Resume (editorial, no cards) ---------------- */
 
 function SkillsSection() {
   return (
     <section id="skills" className="border-t border-border py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl">
-            <p className="font-body text-xs uppercase tracking-[0.25em] text-primary">
-              Toolkit
-            </p>
-            <h2 className="mt-3 font-heading text-3xl font-bold text-foreground sm:text-4xl">
-              Skills & Resume
-            </h2>
-            <p className="mt-3 text-muted-foreground">
-              Technical stack, academic journey, and professional experience.
-            </p>
-          </div>
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          My story
+        </p>
+        <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+          <h2 className="font-heading text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+            About
+          </h2>
           <a
             href="/resume.pdf"
             download
-            className="inline-flex items-center gap-2 self-start rounded-full bg-primary px-5 py-2.5 font-body text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 font-body text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             <Download className="h-4 w-4" />
-            Download Resume
+            View CV
           </a>
         </div>
+        <div className="mt-8 border-t border-border" />
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {skillCategories.map((category) => (
-            <div
-              key={category.category}
-              className="rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-sm"
-            >
-              <h3 className="font-heading text-lg font-semibold text-primary">
-                {category.category}
-              </h3>
+        <div className="mt-12 grid gap-14 lg:grid-cols-2">
+          {/* Left: narrative */}
+          <div className="space-y-6 font-body text-lg leading-relaxed text-muted-foreground">
+            <p>{profile.bio}</p>
+            <p>
+              I work end to end: framing the question, engineering the data,
+              training and evaluating models, then shipping something people can
+              actually use.
+            </p>
+            <p>
+              Currently finishing a master's in Data Science and Intelligent
+              Systems, and open to internships and collaborations.
+            </p>
+          </div>
+
+          {/* Right: lists */}
+          <div className="space-y-12">
+            <ResumeGroup icon={<Briefcase className="h-4 w-4" />} label="Experience">
+              {experience.map((entry) => (
+                <ResumeRow
+                  key={entry.title}
+                  title={entry.title}
+                  subtitle={entry.organization}
+                  meta={entry.period}
+                />
+              ))}
+            </ResumeGroup>
+
+            <ResumeGroup icon={<BookOpen className="h-4 w-4" />} label="Education">
+              {education.map((entry) => (
+                <ResumeRow
+                  key={entry.title}
+                  title={entry.title}
+                  subtitle={entry.organization}
+                  meta={entry.period}
+                />
+              ))}
+            </ResumeGroup>
+
+            <ResumeGroup icon={<Award className="h-4 w-4" />} label="Awards">
+              {awards.map((award) => (
+                <ResumeRow
+                  key={award.title}
+                  title={award.title}
+                  subtitle={award.issuer}
+                  meta={award.year}
+                  link={award.link}
+                />
+              ))}
+            </ResumeGroup>
+
+            <div>
+              <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                Skills
+              </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                {category.skills.map((skill) => (
+                {skillCategories.flatMap((category) => category.skills).map((skill, i) => (
                   <span
-                    key={skill}
-                    className="rounded-full bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground"
+                    key={`${skill}-${i}`}
+                    className="rounded-full border border-border px-3 py-1 font-body text-xs text-foreground"
                   >
                     {skill}
                   </span>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-16 grid gap-12 lg:grid-cols-2">
-          <div>
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <h3 className="font-heading text-2xl font-semibold text-foreground">
-                Education
-              </h3>
-            </div>
-            <div className="space-y-6">
-              {education.map((entry) => (
-                <TimelineItem key={entry.title} entry={entry} />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Briefcase className="h-5 w-5" />
-              </div>
-              <h3 className="font-heading text-2xl font-semibold text-foreground">
-                Experience
-              </h3>
-            </div>
-            <div className="space-y-6">
-              {experience.map((entry) => (
-                <TimelineItem key={entry.title} entry={entry} />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Award className="h-5 w-5" />
-            </div>
-            <h3 className="font-heading text-2xl font-semibold text-foreground">
-              Awards & Certificates
-            </h3>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {awards.map((award) => (
-              <div
-                key={award.title}
-                className="rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-sm"
-              >
-                <h4 className="font-heading text-lg font-semibold text-foreground">
-                  {award.title}
-                </h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {award.issuer} · {award.year}
-                </p>
-                {award.link && (
-                  <a
-                    href={award.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 inline-block text-sm text-primary hover:text-primary/80"
-                  >
-                    View credential
-                  </a>
-                )}
-              </div>
-            ))}
           </div>
         </div>
       </div>
@@ -416,23 +403,56 @@ function SkillsSection() {
   );
 }
 
-function TimelineItem({
-  entry,
+function ResumeGroup({
+  icon,
+  label,
+  children,
 }: {
-  entry: { title: string; organization: string; period: string; description: string };
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="relative border-l-2 border-border pl-6">
-      <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-primary" />
-      <div className="rounded-xl border border-border bg-card p-5">
-        <h4 className="font-heading text-lg font-semibold text-foreground">{entry.title}</h4>
-        <p className="mt-1 text-sm font-medium text-primary">{entry.organization}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{entry.period}</p>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{entry.description}</p>
-      </div>
+    <div>
+      <p className="flex items-center gap-2 font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+        <span className="text-primary">{icon}</span>
+        {label}
+      </p>
+      <div className="mt-4 divide-y divide-border border-t border-border">{children}</div>
     </div>
   );
 }
+
+function ResumeRow({
+  title,
+  subtitle,
+  meta,
+  link,
+}: {
+  title: string;
+  subtitle: string;
+  meta: string;
+  link?: string;
+}) {
+  const content = (
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 py-3">
+      <div className="min-w-0">
+        <p className="font-body text-sm font-semibold text-foreground">{title}</p>
+        <p className="mt-0.5 font-body text-xs text-muted-foreground">{subtitle}</p>
+      </div>
+      <span className="shrink-0 font-body text-xs text-muted-foreground">{meta}</span>
+    </div>
+  );
+
+  return link ? (
+    <a href={link} target="_blank" rel="noopener noreferrer" className="block transition-colors hover:text-primary">
+      {content}
+    </a>
+  ) : (
+    content
+  );
+}
+
 
 /* ---------------- Contact ---------------- */
 
