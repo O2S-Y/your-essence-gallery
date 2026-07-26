@@ -65,14 +65,16 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="relative z-10 flex flex-col">
       <HeroAbout />
       <ProjectsSection />
       <SkillsSection />
+      <AwardsSection />
       <ContactSection />
     </div>
   );
 }
+
 
 /* ---------------- Hero + About (Bauhaus composition) ---------------- */
 
@@ -217,17 +219,17 @@ function BauhausAbout() {
 
 function ProjectsSection() {
   return (
-    <section id="projects" className="border-t border-border py-24">
+    <section id="projects" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Selected projects
         </p>
-        <h2 className="mt-3 font-heading text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+        <h2 className="mt-3 font-display text-6xl tracking-tight text-foreground sm:text-7xl">
           Work
         </h2>
-        <div className="mt-8 border-t border-border" />
 
-        <div className="mt-8 space-y-6">
+        <div className="mt-10 space-y-6">
+
           {projects.map((project, index) => (
             <article
               key={project.slug}
@@ -309,14 +311,16 @@ function ProjectsSection() {
 /* ---------------- Skills / Resume (editorial, no cards) ---------------- */
 
 function SkillsSection() {
+  const skills = skillCategories.flatMap((category) => category.skills);
+
   return (
-    <section id="skills" className="border-t border-border py-24">
+    <section id="skills" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           My story
         </p>
         <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-heading text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+          <h2 className="font-display text-6xl tracking-tight text-foreground sm:text-7xl">
             About
           </h2>
           <a
@@ -328,7 +332,6 @@ function SkillsSection() {
             View CV
           </a>
         </div>
-        <div className="mt-8 border-t border-border" />
 
         <div className="mt-12 grid gap-14 lg:grid-cols-2">
           {/* Left: narrative */}
@@ -368,40 +371,122 @@ function SkillsSection() {
                 />
               ))}
             </ResumeGroup>
-
-            <ResumeGroup icon={<Award className="h-4 w-4" />} label="Awards">
-              {awards.map((award) => (
-                <ResumeRow
-                  key={award.title}
-                  title={award.title}
-                  subtitle={award.issuer}
-                  meta={award.year}
-                  link={award.link}
-                />
-              ))}
-            </ResumeGroup>
-
-            <div>
-              <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                Skills
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {skillCategories.flatMap((category) => category.skills).map((skill, i) => (
-                  <span
-                    key={`${skill}-${i}`}
-                    className="rounded-full border border-border px-3 py-1 font-body text-xs text-foreground"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
+        </div>
+
+        {/* Skills riding a hand-drawn ocean wave */}
+        <div className="mt-24">
+          <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+            Skills
+          </p>
+          <SkillWave skills={skills} />
         </div>
       </div>
     </section>
   );
 }
+
+function SkillWave({ skills }: { skills: string[] }) {
+  return (
+    <div className="relative mt-10 overflow-hidden pb-6">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 220"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-x-0 top-1/2 h-[78%] w-full -translate-y-1/2 text-primary/60"
+      >
+        <path
+          d="M0,130 C60,60 130,58 190,112 C250,166 300,178 360,126 C420,74 486,66 546,120 C606,174 660,182 720,128 C780,74 846,68 906,122 C966,176 1024,180 1084,124 C1130,80 1168,74 1200,104"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M0,158 C64,96 128,92 192,142 C256,192 312,200 372,152 C432,104 492,98 556,148 C620,198 676,204 736,156 C796,108 856,102 920,152 C984,202 1040,204 1100,156 C1140,124 1172,116 1200,138"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeOpacity="0.5"
+          strokeLinecap="round"
+        />
+      </svg>
+
+      <div className="relative flex flex-wrap items-center justify-center gap-x-3 gap-y-4 py-8">
+        {skills.map((skill, i) => (
+          <span
+            key={`${skill}-${i}`}
+            style={{ transform: `translateY(${Math.sin(i * 0.9) * 16}px)` }}
+            className="rounded-full border border-border bg-background/70 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Awards (minimal, work-style rows) ---------------- */
+
+function AwardsSection() {
+  return (
+    <section id="awards" className="relative z-10 py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Recognition
+        </p>
+        <h2 className="mt-3 font-display text-6xl tracking-tight text-foreground sm:text-7xl">
+          Awards
+        </h2>
+
+        <div className="mt-10 space-y-3">
+          {awards.map((award, index) => {
+            const row = (
+              <div className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-2xl bg-secondary/40 p-4 transition-colors hover:bg-secondary sm:gap-7 sm:p-5">
+                <div
+                  className="grid h-14 w-14 shrink-0 place-items-center rounded-xl sm:h-16 sm:w-16"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
+                  }}
+                >
+                  <Award className="h-6 w-6 text-background" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-body text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")} · {award.issuer}
+                  </p>
+                  <p className="mt-1 truncate font-heading text-base font-semibold text-foreground sm:text-lg">
+                    {award.title}
+                  </p>
+                </div>
+                <span className="shrink-0 font-body text-xs text-muted-foreground">
+                  {award.year}
+                </span>
+              </div>
+            );
+
+            return award.link ? (
+              <a
+                key={award.title}
+                href={award.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                {row}
+              </a>
+            ) : (
+              <div key={award.title}>{row}</div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function ResumeGroup({
   icon,
@@ -484,32 +569,69 @@ function ContactSection() {
   };
 
   return (
-    <section id="contact" className="border-t border-border bg-secondary/40 py-24">
+    <section id="contact" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 max-w-2xl">
-          <p className="font-body text-xs uppercase tracking-[0.25em] text-primary">
-            Say hello
-          </p>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-foreground sm:text-4xl">
-            Get in Touch
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Have a project, opportunity, or question? Send a message and I'll respond soon.
-          </p>
-        </div>
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Get in touch
+        </p>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <a
+          href={`mailto:${profile.email}?subject=Hello%20Oussama`}
+          className="group mt-4 block font-display leading-[0.92] tracking-tight text-foreground transition-colors hover:text-primary [font-size:clamp(2.75rem,10vw,7rem)]"
+        >
+          <span className="block">Say hi!</span>
+          <span className="block">
+            Let&apos;s talk{" "}
+            <span className="inline-block transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">
+              ↗
+            </span>
+          </span>
+        </a>
+
+        <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+          <div className="space-y-2 font-body text-sm text-muted-foreground">
+            <a
+              href={`mailto:${profile.email}`}
+              className="block transition-colors hover:text-primary"
+            >
+              {profile.email}
+            </a>
+            <p>{profile.location}</p>
+            <div className="flex flex-wrap gap-5 pt-4 font-body text-xs uppercase tracking-[0.2em]">
+              <a
+                href={`mailto:${profile.email}`}
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
+              >
+                <Mail className="h-3.5 w-3.5" /> Email
+              </a>
+              <a
+                href={profile.linkedIn}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
+              >
+                <Linkedin className="h-3.5 w-3.5" /> LinkedIn
+              </a>
+              <a
+                href={profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
+              >
+                <Github className="h-3.5 w-3.5" /> GitHub
+              </a>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">
-                Name
-              </label>
               <input
                 id="name"
                 type="text"
                 placeholder="Your name"
+                aria-label="Name"
                 {...register("name")}
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
@@ -517,15 +639,13 @@ function ContactSection() {
             </div>
 
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
-                Email
-              </label>
               <input
                 id="email"
                 type="email"
                 placeholder="you@example.com"
+                aria-label="Email"
                 {...register("email")}
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
@@ -533,15 +653,13 @@ function ContactSection() {
             </div>
 
             <div>
-              <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground">
-                Message
-              </label>
               <textarea
                 id="message"
-                rows={6}
+                rows={4}
                 placeholder="Tell me about your project or question..."
+                aria-label="Message"
                 {...register("message")}
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full resize-none border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
               />
               {errors.message && (
                 <p className="mt-1 text-sm text-destructive">{errors.message.message}</p>
@@ -557,51 +675,9 @@ function ContactSection() {
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
-
-          <div className="space-y-6">
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h3 className="font-heading text-xl font-semibold text-foreground">
-                Contact information
-              </h3>
-              <div className="mt-6 space-y-4">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Mail className="h-5 w-5" />
-                  {profile.email}
-                </a>
-                <a
-                  href={profile.linkedIn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Linkedin className="h-5 w-5" />
-                  LinkedIn
-                </a>
-                <a
-                  href={profile.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <Github className="h-5 w-5" />
-                  GitHub
-                </a>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h3 className="font-heading text-xl font-semibold text-foreground">Availability</h3>
-              <p className="mt-4 text-muted-foreground">
-                Currently open for internships, freelance projects, and collaborations in
-                data science, machine learning, and big data engineering.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
   );
 }
+
