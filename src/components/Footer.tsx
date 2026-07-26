@@ -43,14 +43,17 @@ export function Footer() {
         </div>
 
         <div className="overflow-hidden">
-          <p className="select-none whitespace-nowrap text-center font-heading font-bold leading-[0.9] tracking-tight text-foreground [font-size:clamp(2.5rem,14.5vw,12rem)]">
-            Ou<span className="text-primary">2</span>Sama
+          <p className="select-none whitespace-nowrap text-center font-display leading-[0.85] tracking-tight text-foreground [font-size:clamp(3rem,17vw,15rem)]">
+            Ou
+            <span className="text-primary [letter-spacing:-0.06em]">2</span>
+            <span className="[margin-left:-0.04em]">Sama</span>
           </p>
         </div>
 
-        <p className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-          © {currentYear} Oussama Yinssi · Data Science & AI
+        <p className="py-6 text-center text-xs text-muted-foreground">
+          © {currentYear} Oussama Yinssi · Data Science &amp; AI
         </p>
+
       </div>
     </footer>
   );
