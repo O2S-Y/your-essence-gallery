@@ -217,17 +217,17 @@ function BauhausAbout() {
 
 function ProjectsSection() {
   return (
-    <section id="projects" className="border-t border-border py-24">
+    <section id="projects" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Selected projects
         </p>
-        <h2 className="mt-3 font-heading text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+        <h2 className="mt-3 font-display text-6xl tracking-tight text-foreground sm:text-7xl">
           Work
         </h2>
-        <div className="mt-8 border-t border-border" />
 
-        <div className="mt-8 space-y-6">
+        <div className="mt-10 space-y-6">
+
           {projects.map((project, index) => (
             <article
               key={project.slug}
