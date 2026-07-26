@@ -17,6 +17,7 @@
   --font-body: "IBM Plex Sans", sans-serif;
   --font-sans: "IBM Plex Sans", sans-serif;
   --font-serif: "Libre Baskerville", serif;
+  --font-display: "Instrument Serif", "Libre Baskerville", serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
