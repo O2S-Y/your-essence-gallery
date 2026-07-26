@@ -43,7 +43,7 @@ export function Footer() {
         </div>
 
         <div className="overflow-hidden">
-          <p className="select-none whitespace-nowrap text-center font-heading font-bold leading-[0.85] tracking-tight text-foreground [font-size:clamp(3.5rem,19vw,17rem)]">
+          <p className="select-none whitespace-nowrap text-center font-heading font-bold leading-[0.9] tracking-tight text-foreground [font-size:clamp(2.5rem,14.5vw,12rem)]">
             Ou<span className="text-primary">2</span>Sama
           </p>
         </div>
