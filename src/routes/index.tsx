@@ -309,14 +309,16 @@ function ProjectsSection() {
 /* ---------------- Skills / Resume (editorial, no cards) ---------------- */
 
 function SkillsSection() {
+  const skills = skillCategories.flatMap((category) => category.skills);
+
   return (
-    <section id="skills" className="border-t border-border py-24">
+    <section id="skills" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           My story
         </p>
         <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-heading text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+          <h2 className="font-display text-6xl tracking-tight text-foreground sm:text-7xl">
             About
           </h2>
           <a
@@ -328,7 +330,6 @@ function SkillsSection() {
             View CV
           </a>
         </div>
-        <div className="mt-8 border-t border-border" />
 
         <div className="mt-12 grid gap-14 lg:grid-cols-2">
           {/* Left: narrative */}
@@ -368,40 +369,122 @@ function SkillsSection() {
                 />
               ))}
             </ResumeGroup>
-
-            <ResumeGroup icon={<Award className="h-4 w-4" />} label="Awards">
-              {awards.map((award) => (
-                <ResumeRow
-                  key={award.title}
-                  title={award.title}
-                  subtitle={award.issuer}
-                  meta={award.year}
-                  link={award.link}
-                />
-              ))}
-            </ResumeGroup>
-
-            <div>
-              <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                Skills
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {skillCategories.flatMap((category) => category.skills).map((skill, i) => (
-                  <span
-                    key={`${skill}-${i}`}
-                    className="rounded-full border border-border px-3 py-1 font-body text-xs text-foreground"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
+        </div>
+
+        {/* Skills riding a hand-drawn ocean wave */}
+        <div className="mt-24">
+          <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+            Skills
+          </p>
+          <SkillWave skills={skills} />
         </div>
       </div>
     </section>
   );
 }
+
+function SkillWave({ skills }: { skills: string[] }) {
+  return (
+    <div className="relative mt-10 overflow-hidden pb-6">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 220"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-0 h-full w-full text-primary/60"
+      >
+        <path
+          d="M0,130 C60,60 130,58 190,112 C250,166 300,178 360,126 C420,74 486,66 546,120 C606,174 660,182 720,128 C780,74 846,68 906,122 C966,176 1024,180 1084,124 C1130,80 1168,74 1200,104"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M0,158 C64,96 128,92 192,142 C256,192 312,200 372,152 C432,104 492,98 556,148 C620,198 676,204 736,156 C796,108 856,102 920,152 C984,202 1040,204 1100,156 C1140,124 1172,116 1200,138"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeOpacity="0.5"
+          strokeLinecap="round"
+        />
+      </svg>
+
+      <div className="relative flex flex-wrap items-center justify-center gap-x-3 gap-y-4 py-8">
+        {skills.map((skill, i) => (
+          <span
+            key={`${skill}-${i}`}
+            style={{ transform: `translateY(${Math.sin(i * 0.9) * 16}px)` }}
+            className="rounded-full border border-border bg-background/70 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Awards (minimal, work-style rows) ---------------- */
+
+function AwardsSection() {
+  return (
+    <section id="awards" className="relative z-10 py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Recognition
+        </p>
+        <h2 className="mt-3 font-display text-6xl tracking-tight text-foreground sm:text-7xl">
+          Awards
+        </h2>
+
+        <div className="mt-10 space-y-3">
+          {awards.map((award, index) => {
+            const row = (
+              <div className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-2xl bg-secondary/40 p-4 transition-colors hover:bg-secondary sm:gap-7 sm:p-5">
+                <div
+                  className="grid h-14 w-14 shrink-0 place-items-center rounded-xl sm:h-16 sm:w-16"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
+                  }}
+                >
+                  <Award className="h-6 w-6 text-background" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-body text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")} · {award.issuer}
+                  </p>
+                  <p className="mt-1 truncate font-heading text-base font-semibold text-foreground sm:text-lg">
+                    {award.title}
+                  </p>
+                </div>
+                <span className="shrink-0 font-body text-xs text-muted-foreground">
+                  {award.year}
+                </span>
+              </div>
+            );
+
+            return award.link ? (
+              <a
+                key={award.title}
+                href={award.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                {row}
+              </a>
+            ) : (
+              <div key={award.title}>{row}</div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function ResumeGroup({
   icon,
