@@ -33,8 +33,8 @@ export function Header() {
         className={cn(
           "mx-auto flex items-center justify-between transition-all duration-500",
           scrolled
-            ? "h-14 max-w-3xl rounded-full border border-border bg-card/90 px-5 shadow-lg backdrop-blur-md"
-            : "h-16 max-w-6xl rounded-none border-b border-border bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8",
+            ? "h-14 max-w-3xl rounded-full border border-border bg-card/70 px-5 shadow-lg backdrop-blur-md backdrop-saturate-150"
+            : "h-16 w-full max-w-full rounded-none border-b border-border bg-background/60 px-4 backdrop-blur-sm backdrop-saturate-150 sm:px-6 lg:px-8",
         )}
       >
         <a
