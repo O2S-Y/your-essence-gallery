@@ -233,11 +233,40 @@ function ProjectsSection() {
           {projects.map((project, index) => (
             <article
               key={project.slug}
-              className="group grid grid-cols-1 overflow-hidden rounded-2xl bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
+              className="group relative grid grid-cols-1 overflow-hidden rounded-sm bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
             >
+              {/* stitched cord that draws itself around the card on hover */}
+              <svg
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-10 h-full w-full text-primary"
+                preserveAspectRatio="none"
+              >
+                <rect
+                  x="6"
+                  y="6"
+                  width="calc(100% - 12px)"
+                  height="calc(100% - 12px)"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeDasharray="8 10"
+                  pathLength={100}
+                  strokeDashoffset={0}
+                  className="[stroke-dasharray:2_98] [transition:stroke-dasharray_900ms_ease-out,opacity_300ms] opacity-0 group-hover:opacity-100 group-hover:[stroke-dasharray:6_6]"
+                />
+              </svg>
+
               <div className="flex flex-col justify-center p-7 sm:p-10">
-                <p className="font-mono text-xs text-muted-foreground">
-                  {`/* project_${String(index + 1).padStart(2, "0")} */`}
+                <p
+                  className="font-heading text-3xl font-bold leading-none text-foreground/80"
+                  style={{
+                    textShadow:
+                      "1px 1px 0 color-mix(in oklab, var(--primary) 55%, transparent), -1px -1px 0 color-mix(in oklab, var(--background) 80%, transparent), 0 2px 3px color-mix(in oklab, var(--charcoal) 25%, transparent)",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  {String(index + 1).padStart(2, "0")}
                 </p>
                 <h3 className="mt-5 font-heading text-2xl font-bold leading-snug text-foreground sm:text-3xl">
                   {project.title}
@@ -272,6 +301,7 @@ function ProjectsSection() {
               </div>
             </article>
           ))}
+
         </div>
       </div>
     </section>
