@@ -417,9 +417,18 @@ function wavePath(c: WaveCfg, offset = 0) {
   return `M${points.join(" L")}`;
 }
 
+const OCEAN_NAMES: Record<string, string> = {
+  "Languages & Databases": "Language Ocean",
+  "Machine Learning & AI": "Learning Ocean",
+  "Big Data & Engineering": "Big Data Ocean",
+  "Data Visualization & Analytics": "Visualization Ocean",
+  "MLOps & Cloud": "Cloud Ocean",
+};
+
 function oceanName(category: string) {
-  return `${category.split(" ")[0]} Ocean`;
+  return OCEAN_NAMES[category] ?? `${category.split(" ")[0]} Ocean`;
 }
+
 
 function SkillsOcean() {
   return (
