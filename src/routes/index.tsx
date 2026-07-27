@@ -344,12 +344,12 @@ function SkillsSection() {
           </div>
         </div>
 
-        {/* Skills riding a hand-drawn ocean wave */}
+        {/* Skills riding hand-drawn oceans */}
         <div className="mt-24">
           <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Skills
+            Skills Ocean
           </p>
-          <SkillWave skills={skills} />
+          <SkillsOcean />
         </div>
       </div>
     </section>
@@ -357,76 +357,113 @@ function SkillsSection() {
 }
 
 const WAVE_W = 1200;
-const WAVE_H = 170;
-const waveY = (x: number, offset = 0) =>
-  WAVE_H / 2 + offset - 40 * Math.sin((x / WAVE_W) * Math.PI * 3);
+const WAVE_H = 120;
 
-function wavePath(offset = 0) {
+type WaveCfg = { amp: number; freq: number; phase: number; drift: number };
+
+function waveCfg(seed: number): WaveCfg {
+  const r = (n: number) => {
+    const v = Math.sin(seed * 12.9898 + n * 78.233) * 43758.5453;
+    return v - Math.floor(v);
+  };
+  return {
+    amp: 16 + r(1) * 16,
+    freq: 2 + Math.round(r(2) * 2),
+    phase: r(3) * Math.PI * 2,
+    drift: (r(4) - 0.5) * 14,
+  };
+}
+
+const waveY = (x: number, c: WaveCfg, offset = 0) =>
+  WAVE_H / 2 +
+  offset +
+  c.drift -
+  c.amp * Math.sin((x / WAVE_W) * Math.PI * c.freq + c.phase);
+
+function wavePath(c: WaveCfg, offset = 0) {
   const points: string[] = [];
   for (let x = 0; x <= WAVE_W; x += 20) {
-    points.push(`${x},${waveY(x, offset).toFixed(1)}`);
+    points.push(`${x},${waveY(x, c, offset).toFixed(1)}`);
   }
   return `M${points.join(" L")}`;
 }
 
-function chunk<T>(items: T[], size: number) {
-  const rows: T[][] = [];
-  for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
-  return rows;
+function oceanName(category: string) {
+  return `${category.split(" ")[0]} Ocean`;
 }
 
-function SkillWave({ skills }: { skills: string[] }) {
-  const rows = chunk(skills, 6);
-
+function SkillsOcean() {
   return (
-    <div className="mt-8 overflow-x-auto">
-      <div className="min-w-[680px] space-y-2">
-        {rows.map((row, r) => (
-          <div key={r} className="relative" style={{ height: WAVE_H }}>
-            <svg
-              aria-hidden="true"
-              viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
-              preserveAspectRatio="none"
-              className="pointer-events-none absolute inset-0 h-full w-full text-primary/60"
-            >
-              <path
-                d={wavePath(0)}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <path
-                d={wavePath(16)}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeOpacity="0.45"
-                strokeLinecap="round"
-              />
-            </svg>
+    <div className="mt-6 overflow-x-auto">
+      <div className="min-w-[680px]">
+        {skillCategories.map((group, r) => {
+          const cfg = waveCfg(r + 1);
+          const next = waveCfg(r + 2);
+          const endY = waveY(WAVE_W, cfg);
+          const nextStartY = waveY(0, next);
+          return (
+            <div key={group.category} className="relative" style={{ height: WAVE_H }}>
+              <svg
+                aria-hidden="true"
+                viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
+                preserveAspectRatio="none"
+                className="pointer-events-none absolute inset-0 h-full w-full overflow-visible text-primary/60"
+              >
+                <path
+                  d={wavePath(cfg)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <path
+                  d={wavePath(cfg, 11)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeOpacity="0.4"
+                  strokeLinecap="round"
+                />
+                {r < skillCategories.length - 1 && (
+                  <path
+                    d={`M${WAVE_W},${endY.toFixed(1)} C ${WAVE_W + 60},${endY.toFixed(1)} ${WAVE_W + 60},${(WAVE_H + nextStartY).toFixed(1)} ${WAVE_W},${(WAVE_H + nextStartY).toFixed(1)} L 0,${(WAVE_H + nextStartY).toFixed(1)}`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.3"
+                    strokeDasharray="4 6"
+                    strokeLinecap="round"
+                  />
+                )}
+              </svg>
 
-            {row.map((skill, i) => {
-              const x = ((i + 0.5) / row.length) * WAVE_W;
-              return (
-                <span
-                  key={`${skill}-${i}`}
-                  style={{
-                    left: `${(x / WAVE_W) * 100}%`,
-                    top: `${(waveY(x) / WAVE_H) * 100}%`,
-                  }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
-                >
-                  {skill}
-                </span>
-              );
-            })}
-          </div>
-        ))}
+              <span className="pointer-events-none absolute left-0 top-1 font-body text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                {oceanName(group.category)}
+              </span>
+
+              {group.skills.map((skill, i) => {
+                const x = ((i + 0.5) / group.skills.length) * WAVE_W;
+                return (
+                  <span
+                    key={`${skill}-${i}`}
+                    style={{
+                      left: `${(x / WAVE_W) * 100}%`,
+                      top: `${(waveY(x, cfg) / WAVE_H) * 100}%`,
+                    }}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
+                  >
+                    {skill}
+                  </span>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 
 /* ---------------- Awards (alternating timeline, reveal on scroll) ---------------- */
 
