@@ -356,41 +356,72 @@ function SkillsSection() {
   );
 }
 
-function SkillWave({ skills }: { skills: string[] }) {
-  return (
-    <div className="relative mt-10 overflow-hidden pb-6">
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1200 220"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[78%] w-full -translate-y-1/2 text-primary/60"
-      >
-        <path
-          d="M0,130 C60,60 130,58 190,112 C250,166 300,178 360,126 C420,74 486,66 546,120 C606,174 660,182 720,128 C780,74 846,68 906,122 C966,176 1024,180 1084,124 C1130,80 1168,74 1200,104"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M0,158 C64,96 128,92 192,142 C256,192 312,200 372,152 C432,104 492,98 556,148 C620,198 676,204 736,156 C796,108 856,102 920,152 C984,202 1040,204 1100,156 C1140,124 1172,116 1200,138"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeOpacity="0.5"
-          strokeLinecap="round"
-        />
-      </svg>
+const WAVE_W = 1200;
+const WAVE_H = 170;
+const waveY = (x: number, offset = 0) =>
+  WAVE_H / 2 + offset - 40 * Math.sin((x / WAVE_W) * Math.PI * 3);
 
-      <div className="relative flex flex-wrap items-center justify-center gap-x-3 gap-y-4 py-8">
-        {skills.map((skill, i) => (
-          <span
-            key={`${skill}-${i}`}
-            style={{ transform: `translateY(${Math.sin(i * 0.9) * 16}px)` }}
-            className="rounded-full border border-border bg-background/70 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm"
-          >
-            {skill}
-          </span>
+function wavePath(offset = 0) {
+  const points: string[] = [];
+  for (let x = 0; x <= WAVE_W; x += 20) {
+    points.push(`${x},${waveY(x, offset).toFixed(1)}`);
+  }
+  return `M${points.join(" L")}`;
+}
+
+function chunk<T>(items: T[], size: number) {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
+  return rows;
+}
+
+function SkillWave({ skills }: { skills: string[] }) {
+  const rows = chunk(skills, 6);
+
+  return (
+    <div className="mt-8 overflow-x-auto">
+      <div className="min-w-[680px] space-y-2">
+        {rows.map((row, r) => (
+          <div key={r} className="relative" style={{ height: WAVE_H }}>
+            <svg
+              aria-hidden="true"
+              viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
+              preserveAspectRatio="none"
+              className="pointer-events-none absolute inset-0 h-full w-full text-primary/60"
+            >
+              <path
+                d={wavePath(0)}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <path
+                d={wavePath(16)}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeOpacity="0.45"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            {row.map((skill, i) => {
+              const x = ((i + 0.5) / row.length) * WAVE_W;
+              return (
+                <span
+                  key={`${skill}-${i}`}
+                  style={{
+                    left: `${(x / WAVE_W) * 100}%`,
+                    top: `${(waveY(x) / WAVE_H) * 100}%`,
+                  }}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
+                >
+                  {skill}
+                </span>
+              );
+            })}
+          </div>
         ))}
       </div>
     </div>
