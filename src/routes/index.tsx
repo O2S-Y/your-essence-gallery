@@ -236,34 +236,15 @@ function ProjectsSection() {
               className="group grid grid-cols-1 overflow-hidden rounded-2xl bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
             >
               <div className="flex flex-col justify-center p-7 sm:p-10">
-                <div className="flex items-center gap-3 font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <span className="h-px w-8 bg-border" />
-                  <span>{project.tags[0]}</span>
-                </div>
+                <p className="font-mono text-xs text-muted-foreground">
+                  {`/* project_${String(index + 1).padStart(2, "0")} */`}
+                </p>
                 <h3 className="mt-5 font-heading text-2xl font-bold leading-snug text-foreground sm:text-3xl">
                   {project.title}
                 </h3>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {project.tags.slice(1, 4).map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-border px-3 py-1 font-body text-xs text-muted-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {project.outcomes.slice(0, 2).map((outcome) => (
-                    <p
-                      key={outcome}
-                      className="font-body text-sm leading-relaxed text-muted-foreground"
-                    >
-                      {outcome}
-                    </p>
-                  ))}
-                </div>
+                <p className="mt-5 max-w-md font-body text-sm leading-relaxed text-muted-foreground">
+                  {project.outcomes[0]}
+                </p>
                 <div className="mt-8 flex items-center gap-5">
                   <Link
                     to="/projects/$slug"
@@ -273,17 +254,6 @@ function ProjectsSection() {
                     View case study
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </Link>
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-body text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      GitHub
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
                 </div>
               </div>
 
