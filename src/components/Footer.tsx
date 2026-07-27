@@ -42,13 +42,24 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="overflow-hidden">
-          <p className="select-none whitespace-nowrap text-center font-display leading-[0.85] tracking-tight text-foreground [font-size:clamp(3rem,17vw,15rem)]">
-            Ou
-            <span className="text-primary [letter-spacing:-0.06em]">2</span>
-            <span className="[margin-left:-0.04em]">Sama</span>
-          </p>
+        <div className="overflow-x-auto">
+          <pre
+            aria-label="Yinssi Oussama"
+            className="select-none whitespace-pre text-center font-mono font-bold leading-[1.05] text-foreground [font-size:clamp(0.28rem,1.1vw,0.72rem)]"
+          >
+{String.raw`__   _____ _   _ ____ ____ ___ 
+\ \ / /_ _| \ | / ___/ ___|_ _|
+ \ V / | ||  \| \___ \___ \| | 
+  | |  | || |\  |___) |__) | | 
+  |_| |___|_| \_|____/____/___|
+  ___  _   _ ____ ____    _    __  __    _    
+ / _ \| | | / ___/ ___|  / \  |  \/  |  / \   
+| | | | | | \___ \___ \ / _ \ | |\/| | / _ \  
+| |_| | |_| |___) |__) / ___ \| |  | |/ ___ \ 
+ \___/ \___/|____/____/_/   \_\_|  |_/_/   \_\`}
+          </pre>
         </div>
+
 
         <p className="py-6 text-center text-xs text-muted-foreground">
           © {currentYear} Oussama Yinssi · Data Science &amp; AI
