@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -236,34 +236,15 @@ function ProjectsSection() {
               className="group grid grid-cols-1 overflow-hidden rounded-2xl bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
             >
               <div className="flex flex-col justify-center p-7 sm:p-10">
-                <div className="flex items-center gap-3 font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <span className="h-px w-8 bg-border" />
-                  <span>{project.tags[0]}</span>
-                </div>
+                <p className="font-mono text-xs text-muted-foreground">
+                  {`/* project_${String(index + 1).padStart(2, "0")} */`}
+                </p>
                 <h3 className="mt-5 font-heading text-2xl font-bold leading-snug text-foreground sm:text-3xl">
                   {project.title}
                 </h3>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {project.tags.slice(1, 4).map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-border px-3 py-1 font-body text-xs text-muted-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {project.outcomes.slice(0, 2).map((outcome) => (
-                    <p
-                      key={outcome}
-                      className="font-body text-sm leading-relaxed text-muted-foreground"
-                    >
-                      {outcome}
-                    </p>
-                  ))}
-                </div>
+                <p className="mt-5 max-w-md font-body text-sm leading-relaxed text-muted-foreground">
+                  {project.outcomes[0]}
+                </p>
                 <div className="mt-8 flex items-center gap-5">
                   <Link
                     to="/projects/$slug"
@@ -273,17 +254,6 @@ function ProjectsSection() {
                     View case study
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </Link>
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-body text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      GitHub
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
                 </div>
               </div>
 
@@ -386,48 +356,148 @@ function SkillsSection() {
   );
 }
 
-function SkillWave({ skills }: { skills: string[] }) {
-  return (
-    <div className="relative mt-10 overflow-hidden pb-6">
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1200 220"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[78%] w-full -translate-y-1/2 text-primary/60"
-      >
-        <path
-          d="M0,130 C60,60 130,58 190,112 C250,166 300,178 360,126 C420,74 486,66 546,120 C606,174 660,182 720,128 C780,74 846,68 906,122 C966,176 1024,180 1084,124 C1130,80 1168,74 1200,104"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M0,158 C64,96 128,92 192,142 C256,192 312,200 372,152 C432,104 492,98 556,148 C620,198 676,204 736,156 C796,108 856,102 920,152 C984,202 1040,204 1100,156 C1140,124 1172,116 1200,138"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeOpacity="0.5"
-          strokeLinecap="round"
-        />
-      </svg>
+const WAVE_W = 1200;
+const WAVE_H = 170;
+const waveY = (x: number, offset = 0) =>
+  WAVE_H / 2 + offset - 40 * Math.sin((x / WAVE_W) * Math.PI * 3);
 
-      <div className="relative flex flex-wrap items-center justify-center gap-x-3 gap-y-4 py-8">
-        {skills.map((skill, i) => (
-          <span
-            key={`${skill}-${i}`}
-            style={{ transform: `translateY(${Math.sin(i * 0.9) * 16}px)` }}
-            className="rounded-full border border-border bg-background/70 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm"
-          >
-            {skill}
-          </span>
+function wavePath(offset = 0) {
+  const points: string[] = [];
+  for (let x = 0; x <= WAVE_W; x += 20) {
+    points.push(`${x},${waveY(x, offset).toFixed(1)}`);
+  }
+  return `M${points.join(" L")}`;
+}
+
+function chunk<T>(items: T[], size: number) {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
+  return rows;
+}
+
+function SkillWave({ skills }: { skills: string[] }) {
+  const rows = chunk(skills, 6);
+
+  return (
+    <div className="mt-8 overflow-x-auto">
+      <div className="min-w-[680px] space-y-2">
+        {rows.map((row, r) => (
+          <div key={r} className="relative" style={{ height: WAVE_H }}>
+            <svg
+              aria-hidden="true"
+              viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
+              preserveAspectRatio="none"
+              className="pointer-events-none absolute inset-0 h-full w-full text-primary/60"
+            >
+              <path
+                d={wavePath(0)}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <path
+                d={wavePath(16)}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeOpacity="0.45"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            {row.map((skill, i) => {
+              const x = ((i + 0.5) / row.length) * WAVE_W;
+              return (
+                <span
+                  key={`${skill}-${i}`}
+                  style={{
+                    left: `${(x / WAVE_W) * 100}%`,
+                    top: `${(waveY(x) / WAVE_H) * 100}%`,
+                  }}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
+                >
+                  {skill}
+                </span>
+              );
+            })}
+          </div>
         ))}
       </div>
     </div>
   );
 }
 
-/* ---------------- Awards (minimal, work-style rows) ---------------- */
+/* ---------------- Awards (alternating timeline, reveal on scroll) ---------------- */
+
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setVisible(true);
+        });
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, visible };
+}
+
+function AwardRow({
+  award,
+  index,
+}: {
+  award: (typeof awards)[number];
+  index: number;
+}) {
+  const { ref, visible } = useReveal<HTMLDivElement>();
+  const left = index % 2 === 0;
+
+  const content = (
+    <div className="group inline-flex max-w-full items-center gap-4">
+      <div
+        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-transform group-hover:scale-110 ${left ? "" : "order-last"}`}
+        style={{
+          background: "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
+        }}
+      >
+        <Award className="h-5 w-5 text-background" />
+      </div>
+      <div className={left ? "text-left" : "text-right"}>
+        <p className="font-heading text-sm font-semibold text-foreground sm:text-base">
+          {award.title}
+        </p>
+        <p className="mt-0.5 font-body text-xs text-muted-foreground">
+          {award.issuer} · {award.year}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div
+      ref={ref}
+      className={`grid grid-cols-[1fr_auto_1fr] items-center gap-4 transition-all duration-700 ease-out sm:gap-8 ${
+        visible
+          ? "translate-x-0 opacity-100"
+          : `opacity-0 ${left ? "-translate-x-8" : "translate-x-8"}`
+      }`}
+    >
+      <div className="flex justify-end">{left ? content : null}</div>
+      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+      <div className="flex justify-start">{left ? null : content}</div>
+    </div>
+  );
+}
 
 function AwardsSection() {
   return (
@@ -440,52 +510,19 @@ function AwardsSection() {
           Awards
         </h2>
 
-        <div className="mt-10 space-y-3">
-          {awards.map((award, index) => {
-            const row = (
-              <div className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-2xl bg-secondary/40 p-4 transition-colors hover:bg-secondary sm:gap-7 sm:p-5">
-                <div
-                  className="grid h-14 w-14 shrink-0 place-items-center rounded-xl sm:h-16 sm:w-16"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
-                  }}
-                >
-                  <Award className="h-6 w-6 text-background" />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-body text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                    {String(index + 1).padStart(2, "0")} · {award.issuer}
-                  </p>
-                  <p className="mt-1 truncate font-heading text-base font-semibold text-foreground sm:text-lg">
-                    {award.title}
-                  </p>
-                </div>
-                <span className="shrink-0 font-body text-xs text-muted-foreground">
-                  {award.year}
-                </span>
-              </div>
-            );
-
-            return award.link ? (
-              <a
-                key={award.title}
-                href={award.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                {row}
-              </a>
-            ) : (
-              <div key={award.title}>{row}</div>
-            );
-          })}
+        <div className="relative mx-auto mt-14 max-w-4xl">
+          <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border" />
+          <div className="relative space-y-12">
+            {awards.map((award, index) => (
+              <AwardRow key={award.title} award={award} index={index} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 
 function ResumeGroup({
