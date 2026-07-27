@@ -428,7 +428,76 @@ function SkillWave({ skills }: { skills: string[] }) {
   );
 }
 
-/* ---------------- Awards (minimal, work-style rows) ---------------- */
+/* ---------------- Awards (alternating timeline, reveal on scroll) ---------------- */
+
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setVisible(true);
+        });
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, visible };
+}
+
+function AwardRow({
+  award,
+  index,
+}: {
+  award: (typeof awards)[number];
+  index: number;
+}) {
+  const { ref, visible } = useReveal<HTMLDivElement>();
+  const left = index % 2 === 0;
+
+  const content = (
+    <div className="group inline-flex max-w-full items-center gap-4">
+      <div
+        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-transform group-hover:scale-110 ${left ? "" : "order-last"}`}
+        style={{
+          background: "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
+        }}
+      >
+        <Award className="h-5 w-5 text-background" />
+      </div>
+      <div className={left ? "text-left" : "text-right"}>
+        <p className="font-heading text-sm font-semibold text-foreground sm:text-base">
+          {award.title}
+        </p>
+        <p className="mt-0.5 font-body text-xs text-muted-foreground">
+          {award.issuer} · {award.year}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div
+      ref={ref}
+      className={`grid grid-cols-[1fr_auto_1fr] items-center gap-4 transition-all duration-700 ease-out sm:gap-8 ${
+        visible
+          ? "translate-x-0 opacity-100"
+          : `opacity-0 ${left ? "-translate-x-8" : "translate-x-8"}`
+      }`}
+    >
+      <div className="flex justify-end">{left ? content : null}</div>
+      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+      <div className="flex justify-start">{left ? null : content}</div>
+    </div>
+  );
+}
 
 function AwardsSection() {
   return (
@@ -441,52 +510,19 @@ function AwardsSection() {
           Awards
         </h2>
 
-        <div className="mt-10 space-y-3">
-          {awards.map((award, index) => {
-            const row = (
-              <div className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-2xl bg-secondary/40 p-4 transition-colors hover:bg-secondary sm:gap-7 sm:p-5">
-                <div
-                  className="grid h-14 w-14 shrink-0 place-items-center rounded-xl sm:h-16 sm:w-16"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
-                  }}
-                >
-                  <Award className="h-6 w-6 text-background" />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-body text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                    {String(index + 1).padStart(2, "0")} · {award.issuer}
-                  </p>
-                  <p className="mt-1 truncate font-heading text-base font-semibold text-foreground sm:text-lg">
-                    {award.title}
-                  </p>
-                </div>
-                <span className="shrink-0 font-body text-xs text-muted-foreground">
-                  {award.year}
-                </span>
-              </div>
-            );
-
-            return award.link ? (
-              <a
-                key={award.title}
-                href={award.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                {row}
-              </a>
-            ) : (
-              <div key={award.title}>{row}</div>
-            );
-          })}
+        <div className="relative mx-auto mt-14 max-w-4xl">
+          <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border" />
+          <div className="relative space-y-12">
+            {awards.map((award, index) => (
+              <AwardRow key={award.title} award={award} index={index} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 
 function ResumeGroup({
