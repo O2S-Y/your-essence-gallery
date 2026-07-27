@@ -29,20 +29,20 @@ export function LoadingScreen() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-end bg-[var(--charcoal)] transition-opacity duration-700 ${
+      className={`fixed inset-0 z-[100] flex items-end bg-background transition-opacity duration-700 ${
         fading ? "opacity-0" : "opacity-100"
       }`}
       aria-hidden={fading}
     >
       <div className="flex w-full items-baseline gap-6 px-6 pb-6 sm:gap-10 sm:px-10 sm:pb-10">
         <span
-          className="font-heading font-normal leading-none tracking-tight text-[var(--cream)] tabular-nums"
+          className="font-heading font-normal leading-none tracking-tight text-foreground tabular-nums"
           style={{ fontSize: "clamp(4rem, 14vw, 12rem)" }}
         >
           {progress}%
         </span>
         <span
-          className="font-heading font-normal leading-none tracking-tight text-[var(--cream)]/30"
+          className="font-heading font-normal leading-none tracking-tight text-foreground/30"
           style={{ fontSize: "clamp(4rem, 14vw, 12rem)" }}
         >
           Loading
@@ -51,3 +51,4 @@ export function LoadingScreen() {
     </div>
   );
 }
+
