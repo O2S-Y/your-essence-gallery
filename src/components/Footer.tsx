@@ -42,10 +42,10 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="flex justify-center overflow-x-auto py-6">
           <pre
             aria-label="Yinssi Oussama"
-            className="select-none whitespace-pre text-center font-mono font-bold leading-[1.05] text-foreground [font-size:clamp(0.28rem,1.1vw,0.72rem)]"
+            className="select-none whitespace-pre font-mono leading-[1.25] text-foreground [font-size:clamp(0.42rem,1.35vw,1.05rem)]"
           >
 {String.raw`__   _____ _   _ ____ ____ ___ 
 \ \ / /_ _| \ | / ___/ ___|_ _|
