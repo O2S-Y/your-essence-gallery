@@ -563,9 +563,10 @@ function AwardRow({
   /* connector that grows out of the center line to touch the award */
   const connector = (
     <span
-      className={`h-px flex-1 bg-primary/60 transition-transform duration-700 ease-out ${
+      className={`h-px min-w-[32px] flex-1 shrink-0 bg-primary/60 transition-transform duration-700 ease-out ${
         left ? "origin-right" : "origin-left"
       } ${visible ? "scale-x-100" : "scale-x-0"}`}
+
     />
   );
 
