@@ -499,45 +499,70 @@ function AwardRow({
   const left = index % 2 === 0;
 
   const content = (
-    <div className="group inline-flex max-w-full items-center gap-4">
+    <div
+      className={`group flex max-w-full items-center gap-5 ${left ? "flex-row-reverse text-right" : "text-left"}`}
+    >
       <div
-        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-transform group-hover:scale-110 ${left ? "" : "order-last"}`}
+        className="grid h-16 w-16 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 sm:h-20 sm:w-20"
         style={{
           background: "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
         }}
       >
-        <Award className="h-5 w-5 text-background" />
+        <Award className="h-7 w-7 text-background sm:h-8 sm:w-8" />
       </div>
-      <div className={left ? "text-left" : "text-right"}>
-        <p className="font-heading text-sm font-semibold text-foreground sm:text-base">
+      <div>
+        <p className="font-heading text-lg font-bold leading-snug text-foreground sm:text-2xl">
           {award.title}
         </p>
-        <p className="mt-0.5 font-body text-xs text-muted-foreground">
+        <p className="mt-1.5 font-body text-sm text-muted-foreground sm:text-base">
           {award.issuer} · {award.year}
         </p>
       </div>
     </div>
   );
 
+  /* connector that grows out of the center line to touch the award */
+  const connector = (
+    <span
+      className={`h-px flex-1 bg-primary/60 transition-transform duration-700 ease-out ${
+        left ? "origin-right" : "origin-left"
+      } ${visible ? "scale-x-100" : "scale-x-0"}`}
+    />
+  );
+
   return (
     <div
       ref={ref}
-      className={`grid grid-cols-[1fr_auto_1fr] items-center gap-4 transition-all duration-700 ease-out sm:gap-8 ${
-        visible
-          ? "translate-x-0 opacity-100"
-          : `opacity-0 ${left ? "-translate-x-8" : "translate-x-8"}`
-      }`}
+      className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-6"
     >
-      <div className="flex justify-end">{left ? content : null}</div>
-      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-      <div className="flex justify-start">{left ? null : content}</div>
+      <div
+        className={`flex items-center gap-3 transition-all duration-700 ease-out sm:gap-5 ${
+          visible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+        }`}
+      >
+        {left ? content : null}
+        {left ? connector : null}
+      </div>
+      <span
+        className={`h-3 w-3 rounded-full bg-primary transition-transform duration-500 ${
+          visible ? "scale-100" : "scale-0"
+        }`}
+      />
+      <div
+        className={`flex items-center gap-3 transition-all duration-700 ease-out sm:gap-5 ${
+          visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+        }`}
+      >
+        {left ? null : connector}
+        {left ? null : content}
+      </div>
     </div>
   );
 }
 
 function AwardsSection() {
   return (
-    <section id="awards" className="relative z-10 py-24">
+    <section id="awards" className="relative z-10 py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Recognition
@@ -546,9 +571,9 @@ function AwardsSection() {
           Awards
         </h2>
 
-        <div className="relative mx-auto mt-14 max-w-4xl">
+        <div className="relative mx-auto mt-20 max-w-6xl">
           <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border" />
-          <div className="relative space-y-12">
+          <div className="relative space-y-20 sm:space-y-24">
             {awards.map((award, index) => (
               <AwardRow key={award.title} award={award} index={index} />
             ))}
@@ -558,6 +583,7 @@ function AwardsSection() {
     </section>
   );
 }
+
 
 
 
