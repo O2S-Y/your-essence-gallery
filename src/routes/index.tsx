@@ -233,11 +233,40 @@ function ProjectsSection() {
           {projects.map((project, index) => (
             <article
               key={project.slug}
-              className="group grid grid-cols-1 overflow-hidden rounded-2xl bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
+              className="group relative grid grid-cols-1 overflow-hidden rounded-sm bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
             >
+              {/* stitched cord that draws itself around the card on hover */}
+              <svg
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-10 h-full w-full text-primary"
+                preserveAspectRatio="none"
+              >
+                <rect
+                  x="6"
+                  y="6"
+                  width="calc(100% - 12px)"
+                  height="calc(100% - 12px)"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeDasharray="8 10"
+                  pathLength={100}
+                  strokeDashoffset={0}
+                  className="[stroke-dasharray:2_98] [transition:stroke-dasharray_900ms_ease-out,opacity_300ms] opacity-0 group-hover:opacity-100 group-hover:[stroke-dasharray:6_6]"
+                />
+              </svg>
+
               <div className="flex flex-col justify-center p-7 sm:p-10">
-                <p className="font-mono text-xs text-muted-foreground">
-                  {`/* project_${String(index + 1).padStart(2, "0")} */`}
+                <p
+                  className="font-heading text-3xl font-bold leading-none text-foreground/80"
+                  style={{
+                    textShadow:
+                      "1px 1px 0 color-mix(in oklab, var(--primary) 55%, transparent), -1px -1px 0 color-mix(in oklab, var(--background) 80%, transparent), 0 2px 3px color-mix(in oklab, var(--charcoal) 25%, transparent)",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  {String(index + 1).padStart(2, "0")}
                 </p>
                 <h3 className="mt-5 font-heading text-2xl font-bold leading-snug text-foreground sm:text-3xl">
                   {project.title}
@@ -272,6 +301,7 @@ function ProjectsSection() {
               </div>
             </article>
           ))}
+
         </div>
       </div>
     </section>
@@ -281,7 +311,6 @@ function ProjectsSection() {
 /* ---------------- Skills / Resume (editorial, no cards) ---------------- */
 
 function SkillsSection() {
-  const skills = skillCategories.flatMap((category) => category.skills);
 
   return (
     <section id="skills" className="relative z-10 py-24">
@@ -344,12 +373,12 @@ function SkillsSection() {
           </div>
         </div>
 
-        {/* Skills riding a hand-drawn ocean wave */}
+        {/* Skills riding hand-drawn oceans */}
         <div className="mt-24">
           <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Skills
+            Skills Ocean
           </p>
-          <SkillWave skills={skills} />
+          <SkillsOcean />
         </div>
       </div>
     </section>
@@ -357,76 +386,122 @@ function SkillsSection() {
 }
 
 const WAVE_W = 1200;
-const WAVE_H = 170;
-const waveY = (x: number, offset = 0) =>
-  WAVE_H / 2 + offset - 40 * Math.sin((x / WAVE_W) * Math.PI * 3);
+const WAVE_H = 120;
 
-function wavePath(offset = 0) {
+type WaveCfg = { amp: number; freq: number; phase: number; drift: number };
+
+function waveCfg(seed: number): WaveCfg {
+  const r = (n: number) => {
+    const v = Math.sin(seed * 12.9898 + n * 78.233) * 43758.5453;
+    return v - Math.floor(v);
+  };
+  return {
+    amp: 16 + r(1) * 16,
+    freq: 2 + Math.round(r(2) * 2),
+    phase: r(3) * Math.PI * 2,
+    drift: (r(4) - 0.5) * 14,
+  };
+}
+
+const waveY = (x: number, c: WaveCfg, offset = 0) =>
+  WAVE_H / 2 +
+  offset +
+  c.drift -
+  c.amp * Math.sin((x / WAVE_W) * Math.PI * c.freq + c.phase);
+
+function wavePath(c: WaveCfg, offset = 0) {
   const points: string[] = [];
   for (let x = 0; x <= WAVE_W; x += 20) {
-    points.push(`${x},${waveY(x, offset).toFixed(1)}`);
+    points.push(`${x},${waveY(x, c, offset).toFixed(1)}`);
   }
   return `M${points.join(" L")}`;
 }
 
-function chunk<T>(items: T[], size: number) {
-  const rows: T[][] = [];
-  for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
-  return rows;
+const OCEAN_NAMES: Record<string, string> = {
+  "Languages & Databases": "Language Ocean",
+  "Machine Learning & AI": "Learning Ocean",
+  "Big Data & Engineering": "Big Data Ocean",
+  "Data Visualization & Analytics": "Visualization Ocean",
+  "MLOps & Cloud": "Cloud Ocean",
+};
+
+function oceanName(category: string) {
+  return OCEAN_NAMES[category] ?? `${category.split(" ")[0]} Ocean`;
 }
 
-function SkillWave({ skills }: { skills: string[] }) {
-  const rows = chunk(skills, 6);
 
+function SkillsOcean() {
   return (
-    <div className="mt-8 overflow-x-auto">
-      <div className="min-w-[680px] space-y-2">
-        {rows.map((row, r) => (
-          <div key={r} className="relative" style={{ height: WAVE_H }}>
-            <svg
-              aria-hidden="true"
-              viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
-              preserveAspectRatio="none"
-              className="pointer-events-none absolute inset-0 h-full w-full text-primary/60"
-            >
-              <path
-                d={wavePath(0)}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <path
-                d={wavePath(16)}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeOpacity="0.45"
-                strokeLinecap="round"
-              />
-            </svg>
+    <div className="mt-6 overflow-x-auto">
+      <div className="min-w-[680px]">
+        {skillCategories.map((group, r) => {
+          const cfg = waveCfg(r + 1);
+          const next = waveCfg(r + 2);
+          const endY = waveY(WAVE_W, cfg);
+          const nextStartY = waveY(0, next);
+          return (
+            <div key={group.category} className="relative" style={{ height: WAVE_H }}>
+              <svg
+                aria-hidden="true"
+                viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
+                preserveAspectRatio="none"
+                className="pointer-events-none absolute inset-0 h-full w-full overflow-visible text-primary/60"
+              >
+                <path
+                  d={wavePath(cfg)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <path
+                  d={wavePath(cfg, 11)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeOpacity="0.4"
+                  strokeLinecap="round"
+                />
+                {r < skillCategories.length - 1 && (
+                  <path
+                    d={`M${WAVE_W},${endY.toFixed(1)} C ${WAVE_W + 60},${endY.toFixed(1)} ${WAVE_W + 60},${(WAVE_H + nextStartY).toFixed(1)} ${WAVE_W},${(WAVE_H + nextStartY).toFixed(1)} L 0,${(WAVE_H + nextStartY).toFixed(1)}`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.3"
+                    strokeDasharray="4 6"
+                    strokeLinecap="round"
+                  />
+                )}
+              </svg>
 
-            {row.map((skill, i) => {
-              const x = ((i + 0.5) / row.length) * WAVE_W;
-              return (
-                <span
-                  key={`${skill}-${i}`}
-                  style={{
-                    left: `${(x / WAVE_W) * 100}%`,
-                    top: `${(waveY(x) / WAVE_H) * 100}%`,
-                  }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
-                >
-                  {skill}
-                </span>
-              );
-            })}
-          </div>
-        ))}
+              <span className="pointer-events-none absolute left-0 top-1 font-body text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                {oceanName(group.category)}
+              </span>
+
+              {group.skills.map((skill, i) => {
+                const x = ((i + 0.5) / group.skills.length) * WAVE_W;
+                return (
+                  <span
+                    key={`${skill}-${i}`}
+                    style={{
+                      left: `${(x / WAVE_W) * 100}%`,
+                      top: `${(waveY(x, cfg) / WAVE_H) * 100}%`,
+                    }}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
+                  >
+                    {skill}
+                  </span>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 
 /* ---------------- Awards (alternating timeline, reveal on scroll) ---------------- */
 
@@ -463,45 +538,71 @@ function AwardRow({
   const left = index % 2 === 0;
 
   const content = (
-    <div className="group inline-flex max-w-full items-center gap-4">
+    <div
+      className={`group flex max-w-full items-center gap-5 ${left ? "flex-row-reverse text-right" : "text-left"}`}
+    >
       <div
-        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-transform group-hover:scale-110 ${left ? "" : "order-last"}`}
+        className="grid h-16 w-16 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 sm:h-20 sm:w-20"
         style={{
           background: "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
         }}
       >
-        <Award className="h-5 w-5 text-background" />
+        <Award className="h-7 w-7 text-background sm:h-8 sm:w-8" />
       </div>
-      <div className={left ? "text-left" : "text-right"}>
-        <p className="font-heading text-sm font-semibold text-foreground sm:text-base">
+      <div>
+        <p className="font-heading text-lg font-bold leading-snug text-foreground sm:text-2xl">
           {award.title}
         </p>
-        <p className="mt-0.5 font-body text-xs text-muted-foreground">
+        <p className="mt-1.5 font-body text-sm text-muted-foreground sm:text-base">
           {award.issuer} · {award.year}
         </p>
       </div>
     </div>
   );
 
+  /* connector that grows out of the center line to touch the award */
+  const connector = (
+    <span
+      className={`h-[2px] min-w-[48px] flex-1 shrink-0 bg-primary/70 transition-transform duration-700 ease-out ${
+        left ? "origin-right" : "origin-left"
+      } ${visible ? "scale-x-100" : "scale-x-0"}`}
+
+    />
+  );
+
   return (
     <div
       ref={ref}
-      className={`grid grid-cols-[1fr_auto_1fr] items-center gap-4 transition-all duration-700 ease-out sm:gap-8 ${
-        visible
-          ? "translate-x-0 opacity-100"
-          : `opacity-0 ${left ? "-translate-x-8" : "translate-x-8"}`
-      }`}
+      className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-6"
     >
-      <div className="flex justify-end">{left ? content : null}</div>
-      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-      <div className="flex justify-start">{left ? null : content}</div>
+      <div
+        className={`flex items-center gap-3 transition-all duration-700 ease-out sm:gap-5 ${
+          visible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+        }`}
+      >
+        {left ? content : null}
+        {left ? connector : null}
+      </div>
+      <span
+        className={`h-3 w-3 rounded-full bg-primary transition-transform duration-500 ${
+          visible ? "scale-100" : "scale-0"
+        }`}
+      />
+      <div
+        className={`flex items-center gap-3 transition-all duration-700 ease-out sm:gap-5 ${
+          visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+        }`}
+      >
+        {left ? null : connector}
+        {left ? null : content}
+      </div>
     </div>
   );
 }
 
 function AwardsSection() {
   return (
-    <section id="awards" className="relative z-10 py-24">
+    <section id="awards" className="relative z-10 py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Recognition
@@ -510,9 +611,9 @@ function AwardsSection() {
           Awards
         </h2>
 
-        <div className="relative mx-auto mt-14 max-w-4xl">
+        <div className="relative mx-auto mt-20 max-w-6xl">
           <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border" />
-          <div className="relative space-y-12">
+          <div className="relative space-y-20 sm:space-y-24">
             {awards.map((award, index) => (
               <AwardRow key={award.title} award={award} index={index} />
             ))}
@@ -522,6 +623,7 @@ function AwardsSection() {
     </section>
   );
 }
+
 
 
 
