@@ -281,7 +281,6 @@ function ProjectsSection() {
 /* ---------------- Skills / Resume (editorial, no cards) ---------------- */
 
 function SkillsSection() {
-  const skills = skillCategories.flatMap((category) => category.skills);
 
   return (
     <section id="skills" className="relative z-10 py-24">
