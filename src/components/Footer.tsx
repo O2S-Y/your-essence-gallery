@@ -1,6 +1,7 @@
 import { Linkedin, Github, Mail } from "lucide-react";
+import footerArtwork from "../assets/yinssi-oussama-footer.jpg.asset.json";
 
-const currentYear = new Date().getFullYear();
+const currentYear = "2026";
 
 export function Footer() {
   return (
