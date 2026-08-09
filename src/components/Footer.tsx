@@ -1,6 +1,7 @@
 import { Linkedin, Github, Mail } from "lucide-react";
+import footerArtwork from "../assets/yinssi-oussama-footer.jpg.asset.json";
 
-const currentYear = new Date().getFullYear();
+const currentYear = "2026";
 
 export function Footer() {
   return (
@@ -42,23 +43,15 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex justify-center overflow-x-auto py-6">
-          <pre
-            aria-label="Yinssi Oussama"
-            className="select-none whitespace-pre font-mono leading-[1.25] text-foreground [font-size:clamp(0.42rem,1.35vw,1.05rem)]"
-          >
-{String.raw`__   _____ _   _ ____ ____ ___ 
-\ \ / /_ _| \ | / ___/ ___|_ _|
- \ V / | ||  \| \___ \___ \| | 
-  | |  | || |\  |___) |__) | | 
-  |_| |___|_| \_|____/____/___|
-  ___  _   _ ____ ____    _    __  __    _    
- / _ \| | | / ___/ ___|  / \  |  \/  |  / \   
-| | | | | | \___ \___ \ / _ \ | |\/| | / _ \  
-| |_| | |_| |___) |__) / ___ \| |  | |/ ___ \ 
- \___/ \___/|____/____/_/   \_\_|  |_/_/   \_\ `}
-          </pre>
+        <div className="relative overflow-hidden py-6">
+          <img
+            src={footerArtwork.url}
+            alt="Origami cranes suspended in an airy installation with the Yinssi Oussama wordmark"
+            className="h-auto max-h-[34rem] w-full object-cover object-center"
+            loading="lazy"
+          />
         </div>
+
 
 
         <p className="py-6 text-center text-xs text-muted-foreground">
