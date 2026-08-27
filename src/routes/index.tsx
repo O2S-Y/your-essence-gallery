@@ -69,7 +69,7 @@ function HomePage() {
       <HeroAbout />
       <ProjectsSection />
       <SkillsSection />
-      <AwardsSection />
+      
       <ContactSection />
     </div>
   );
