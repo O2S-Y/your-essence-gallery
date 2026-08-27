@@ -1,63 +1,22 @@
-import { Linkedin, Github, Mail } from "lucide-react";
 import footerArtwork from "../assets/yinssi-oussama-footer.jpg.asset.json";
 
 const currentYear = "2026";
 
 export function Footer() {
   return (
-    <footer className="relative z-10 bg-background">
-      <div className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-6 pb-8">
-          <a
-            href="mailto:oussamayinssi@gmail.com"
-            className="font-body text-sm text-muted-foreground transition-colors hover:text-primary"
-          >
-            oussamayinssi@gmail.com
-          </a>
-          <div className="flex items-center gap-5">
-            <a
-              href="https://www.linkedin.com/in/oussama-yinssi-328396228/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="text-muted-foreground transition-colors hover:text-primary"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a
-              href="https://github.com/O2S-Y"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="text-muted-foreground transition-colors hover:text-primary"
-            >
-              <Github className="h-5 w-5" />
-            </a>
-            <a
-              href="mailto:oussamayinssi@gmail.com"
-              aria-label="Email"
-              className="text-muted-foreground transition-colors hover:text-primary"
-            >
-              <Mail className="h-5 w-5" />
-            </a>
-          </div>
-        </div>
+    <footer className="relative z-10 min-h-[26rem] overflow-hidden bg-background sm:min-h-[34rem]">
+      <img
+        src={footerArtwork.url}
+        alt="Origami cranes suspended in an airy installation with the Yinssi Oussama wordmark"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+        loading="lazy"
+      />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background/80 to-transparent" />
 
-        <div className="relative overflow-hidden py-6">
-          <img
-            src={footerArtwork.url}
-            alt="Origami cranes suspended in an airy installation with the Yinssi Oussama wordmark"
-            className="h-auto max-h-[34rem] w-full object-cover object-center"
-            loading="lazy"
-          />
-        </div>
-
-
-
-        <p className="py-6 text-center text-xs text-muted-foreground">
+      <div className="relative flex min-h-[26rem] flex-col justify-end sm:min-h-[34rem]">
+        <p className="px-4 py-6 text-center font-body text-xs text-foreground/70 sm:px-6 lg:px-8">
           © {currentYear} Oussama Yinssi · Data Science &amp; AI
         </p>
-
       </div>
     </footer>
   );
