@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,7 +13,7 @@ import {
   Linkedin,
   Github,
   Send,
-  Award,
+  
   BookOpen,
   Briefcase,
 } from "lucide-react";
@@ -23,7 +23,7 @@ import {
   skillCategories,
   education,
   experience,
-  awards,
+
 } from "@/data/portfolio";
 import { submitContactMessage } from "@/lib/contact.functions";
 
@@ -69,7 +69,7 @@ function HomePage() {
       <HeroAbout />
       <ProjectsSection />
       <SkillsSection />
-      <AwardsSection />
+      
       <ContactSection />
     </div>
   );
@@ -431,6 +431,8 @@ function oceanName(category: string) {
 
 
 function SkillsOcean() {
+  const [open, setOpen] = useState<number | null>(null);
+
   return (
     <div className="mt-6 overflow-x-auto">
       <div className="min-w-[680px]">
@@ -439,13 +441,24 @@ function SkillsOcean() {
           const next = waveCfg(r + 2);
           const endY = waveY(WAVE_W, cfg);
           const nextStartY = waveY(0, next);
+          const expanded = open === r;
           return (
-            <div key={group.category} className="relative" style={{ height: WAVE_H }}>
+            <div
+              key={group.category}
+              onMouseEnter={() => setOpen(r)}
+              onMouseLeave={() => setOpen((cur) => (cur === r ? null : cur))}
+              onFocus={() => setOpen(r)}
+              tabIndex={0}
+              className="relative outline-none transition-[height] duration-500 ease-out"
+              style={{ height: expanded ? WAVE_H : 46 }}
+            >
               <svg
                 aria-hidden="true"
                 viewBox={`0 0 ${WAVE_W} ${WAVE_H}`}
                 preserveAspectRatio="none"
-                className="pointer-events-none absolute inset-0 h-full w-full overflow-visible text-primary/60"
+                className={`pointer-events-none absolute inset-0 h-full w-full overflow-visible transition-colors duration-300 ${
+                  expanded ? "text-primary/70" : "text-primary/35"
+                }`}
               >
                 <path
                   d={wavePath(cfg)}
@@ -475,7 +488,11 @@ function SkillsOcean() {
                 )}
               </svg>
 
-              <span className="pointer-events-none absolute left-0 top-1 font-body text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              <span
+                className={`pointer-events-none absolute left-0 top-1 font-body text-[10px] uppercase tracking-[0.25em] transition-colors duration-300 ${
+                  expanded ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
                 {oceanName(group.category)}
               </span>
 
@@ -488,7 +505,9 @@ function SkillsOcean() {
                       left: `${(x / WAVE_W) * 100}%`,
                       top: `${(waveY(x, cfg) / WAVE_H) * 100}%`,
                     }}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg"
+                    className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-default whitespace-nowrap rounded-full border border-border bg-background/80 px-3.5 py-1.5 font-body text-xs text-foreground backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg ${
+                      expanded ? "opacity-100" : "pointer-events-none opacity-0"
+                    }`}
                   >
                     {skill}
                   </span>
@@ -502,127 +521,6 @@ function SkillsOcean() {
   );
 }
 
-
-/* ---------------- Awards (alternating timeline, reveal on scroll) ---------------- */
-
-function useReveal<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setVisible(true);
-        });
-      },
-      { threshold: 0.3 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return { ref, visible };
-}
-
-function AwardRow({
-  award,
-  index,
-}: {
-  award: (typeof awards)[number];
-  index: number;
-}) {
-  const { ref, visible } = useReveal<HTMLDivElement>();
-  const left = index % 2 === 0;
-
-  const content = (
-    <div
-      className={`group flex max-w-full items-center gap-5 ${left ? "flex-row-reverse text-right" : "text-left"}`}
-    >
-      <div
-        className="grid h-16 w-16 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 sm:h-20 sm:w-20"
-        style={{
-          background: "linear-gradient(135deg, var(--sage-300), var(--sage-600))",
-        }}
-      >
-        <Award className="h-7 w-7 text-background sm:h-8 sm:w-8" />
-      </div>
-      <div>
-        <p className="font-heading text-lg font-bold leading-snug text-foreground sm:text-2xl">
-          {award.title}
-        </p>
-        <p className="mt-1.5 font-body text-sm text-muted-foreground sm:text-base">
-          {award.issuer} · {award.year}
-        </p>
-      </div>
-    </div>
-  );
-
-  /* connector that grows out of the center line to touch the award */
-  const connector = (
-    <span
-      className={`h-[2px] min-w-[48px] flex-1 shrink-0 bg-primary/70 transition-transform duration-700 ease-out ${
-        left ? "origin-right" : "origin-left"
-      } ${visible ? "scale-x-100" : "scale-x-0"}`}
-
-    />
-  );
-
-  return (
-    <div
-      ref={ref}
-      className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-6"
-    >
-      <div
-        className={`flex items-center gap-3 transition-all duration-700 ease-out sm:gap-5 ${
-          visible ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
-        }`}
-      >
-        {left ? content : null}
-        {left ? connector : null}
-      </div>
-      <span
-        className={`h-3 w-3 rounded-full bg-primary transition-transform duration-500 ${
-          visible ? "scale-100" : "scale-0"
-        }`}
-      />
-      <div
-        className={`flex items-center gap-3 transition-all duration-700 ease-out sm:gap-5 ${
-          visible ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
-        }`}
-      >
-        {left ? null : connector}
-        {left ? null : content}
-      </div>
-    </div>
-  );
-}
-
-function AwardsSection() {
-  return (
-    <section id="awards" className="relative z-10 py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
-          Recognition
-        </p>
-        <h2 className="mt-3 font-display text-6xl tracking-tight text-foreground sm:text-7xl">
-          Awards
-        </h2>
-
-        <div className="relative mx-auto mt-20 max-w-6xl">
-          <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border" />
-          <div className="relative space-y-20 sm:space-y-24">
-            {awards.map((award, index) => (
-              <AwardRow key={award.title} award={award} index={index} />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 
 
