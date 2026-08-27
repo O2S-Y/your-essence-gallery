@@ -13,7 +13,7 @@ import {
   Linkedin,
   Github,
   Send,
-  Award,
+  
   BookOpen,
   Briefcase,
 } from "lucide-react";
