@@ -38,20 +38,34 @@ export function Header() {
       >
         <a
           href="/"
-          className={cn(
-            "font-display tracking-tight text-foreground transition-all hover:text-primary",
-            scrolled ? "text-lg" : "text-2xl",
-          )}
+          aria-label="Oussama Yinssi — home"
+          className="group relative flex items-center overflow-hidden font-display tracking-tight text-foreground transition-colors hover:text-primary"
         >
-          {scrolled ? (
-            <>
-              Ou<span className="[letter-spacing:-0.06em]">2</span>
-              <span className="[margin-left:-0.04em]">Sama</span>
-            </>
-          ) : (
-            "Oussama Yinssi"
-          )}
+          {/* full wordmark */}
+          <span
+            className={cn(
+              "block whitespace-nowrap text-2xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              scrolled
+                ? "max-w-0 -translate-y-2 opacity-0 blur-[2px]"
+                : "max-w-[16rem] translate-y-0 opacity-100 blur-0",
+            )}
+          >
+            Oussama Yinssi
+          </span>
+          {/* compact mark */}
+          <span
+            className={cn(
+              "block whitespace-nowrap text-lg transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              scrolled
+                ? "max-w-[8rem] translate-y-0 opacity-100 blur-0"
+                : "max-w-0 translate-y-2 opacity-0 blur-[2px]",
+            )}
+          >
+            Ou<span className="[letter-spacing:-0.06em]">2</span>
+            <span className="[margin-left:-0.04em]">Sama</span>
+          </span>
         </a>
+
 
 
         <nav
