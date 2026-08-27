@@ -132,9 +132,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <LoadingScreen />
-        <div className="flex min-h-screen flex-col">
+        <div className="relative flex min-h-screen flex-col">
+          <BackgroundCranes />
           <Header />
-          <main className="flex-1 pt-16">
+          <main className="relative z-10 flex-1 pt-16">
             <Outlet />
           </main>
           <Footer />
