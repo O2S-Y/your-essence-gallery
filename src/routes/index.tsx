@@ -23,7 +23,7 @@ import {
   skillCategories,
   education,
   experience,
-  awards,
+
 } from "@/data/portfolio";
 import { submitContactMessage } from "@/lib/contact.functions";
 
