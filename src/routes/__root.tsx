@@ -16,6 +16,7 @@ import { ThemeProvider } from "../components/ThemeProvider";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { LoadingScreen } from "../components/LoadingScreen";
+import { BackgroundCranes } from "../components/BackgroundCranes";
 
 function NotFoundComponent() {
   return (
