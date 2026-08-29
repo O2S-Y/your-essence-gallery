@@ -52,7 +52,7 @@ export function Header() {
           >
             Oussama Yinssi
           </span>
-          {/* compact mark */}
+          {/* compact mark — O and Y glide in from opposite sides */}
           <span
             className={cn(
               "block whitespace-nowrap text-lg transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -60,9 +60,38 @@ export function Header() {
                 ? "max-w-[8rem] translate-y-0 opacity-100 blur-0"
                 : "max-w-0 translate-y-2 opacity-0 blur-[2px]",
             )}
+            aria-hidden="true"
           >
-            Ou<span className="[letter-spacing:-0.06em]">2</span>
-            <span className="[margin-left:-0.04em]">Sama</span>
+            <span className="inline-flex items-baseline">
+              <span
+                className={cn(
+                  "inline-block transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  scrolled
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-6 opacity-0",
+                )}
+              >
+                O
+              </span>
+              <span
+                className={cn(
+                  "inline-block text-primary transition-all duration-500 delay-150",
+                  scrolled ? "scale-100 opacity-100" : "scale-0 opacity-0",
+                )}
+              >
+                .
+              </span>
+              <span
+                className={cn(
+                  "inline-block transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  scrolled
+                    ? "translate-x-0 opacity-100"
+                    : "translate-x-6 opacity-0",
+                )}
+              >
+                Y
+              </span>
+            </span>
           </span>
         </a>
 
