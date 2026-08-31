@@ -4,17 +4,17 @@ const currentYear = "2026";
 
 export function Footer() {
   return (
-    <footer className="relative z-10 overflow-hidden border-t border-border bg-card">
+    <footer className="relative z-10 flex min-h-[28rem] flex-col overflow-hidden border-t border-border bg-card sm:min-h-[40rem] lg:min-h-[48rem]">
       {/* origami crane stuck to the footer background */}
       <img
         src={footerCrane.url}
         alt=""
         aria-hidden
         loading="lazy"
-        className="pointer-events-none absolute -right-10 bottom-[-6%] w-[26rem] max-w-none rotate-12 opacity-[0.08] mix-blend-multiply invert select-none dark:bottom-[-8%] dark:opacity-[0.12] dark:mix-blend-screen dark:invert-0 sm:-right-16 sm:w-[38rem] lg:w-[48rem]"
+        className="pointer-events-none absolute bottom-0 -right-4 w-[20rem] max-w-none rotate-12 opacity-[0.12] mix-blend-multiply invert select-none dark:opacity-[0.18] dark:mix-blend-screen dark:invert-0 sm:-right-8 sm:w-[32rem] lg:-right-12 lg:w-[40rem]"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-10 sm:px-6 lg:px-8">
         <div className="mt-8 overflow-hidden select-none sm:mt-10">
           <p
             className="font-display italic leading-[0.8] tracking-tight whitespace-nowrap text-muted-foreground/60"
@@ -24,9 +24,11 @@ export function Footer() {
           </p>
         </div>
 
-        <p className="pb-8 pt-6 font-body text-xs text-muted-foreground">
-          © {currentYear} Oussama Yinssi. All rights reserved.
-        </p>
+        <div className="flex flex-1 items-center justify-center pb-8">
+          <p className="text-center font-body text-xs text-muted-foreground">
+            © {currentYear} Oussama Yinssi. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
