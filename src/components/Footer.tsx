@@ -15,7 +15,7 @@ export function Footer() {
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-10 sm:px-6 lg:px-8">
-        <div className="mt-8 overflow-hidden select-none sm:mt-10">
+        <div className="relative z-10 mt-8 overflow-hidden select-none sm:mt-10">
           <p
             className="font-display italic leading-[0.8] tracking-tight whitespace-nowrap text-muted-foreground/60"
             style={{ fontSize: "clamp(5rem, 24vw, 20rem)", marginLeft: "-0.06em" }}
