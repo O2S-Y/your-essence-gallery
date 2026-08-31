@@ -1,24 +1,20 @@
-import craneArt from "../assets/crane-ascii.png.asset.json";
+import footerCrane from "../assets/footer-crane.png.asset.json";
 
 const currentYear = "2026";
 
 export function Footer() {
   return (
     <footer className="relative z-10 overflow-hidden border-t border-border bg-card">
-      {/* origami at the side */}
+      {/* origami crane stuck to the footer background */}
       <img
-        src={craneArt.url}
+        src={footerCrane.url}
         alt=""
         aria-hidden
         loading="lazy"
-        className="pointer-events-none absolute -left-14 top-2 w-56 max-w-none opacity-20 mix-blend-multiply select-none sm:-left-10 sm:w-80 dark:opacity-15 dark:mix-blend-screen dark:invert"
+        className="pointer-events-none absolute -right-10 bottom-[-6%] w-[26rem] max-w-none rotate-12 opacity-[0.08] mix-blend-multiply invert select-none dark:bottom-[-8%] dark:opacity-[0.12] dark:mix-blend-screen dark:invert-0 sm:-right-16 sm:w-[38rem] lg:w-[48rem]"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 pt-14 sm:px-6 lg:px-8">
-        <p className="font-display text-xl tracking-tight text-foreground sm:text-2xl">
-          Oussama Yinssi
-        </p>
-
+      <div className="relative mx-auto w-full max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
         <div className="mt-8 overflow-hidden select-none sm:mt-10">
           <p
             className="font-display italic leading-[0.8] tracking-tight whitespace-nowrap text-muted-foreground/60"
@@ -28,7 +24,9 @@ export function Footer() {
           </p>
         </div>
 
-        <p className="pb-6 pt-4 font-body text-xs text-muted-foreground">© {currentYear}</p>
+        <p className="pb-8 pt-6 font-body text-xs text-muted-foreground">
+          © {currentYear} Oussama Yinssi. All rights reserved.
+        </p>
       </div>
     </footer>
   );
