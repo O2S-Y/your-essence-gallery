@@ -38,7 +38,7 @@ export function OrizuruBar({ height = 76 }: { height?: number }) {
     let scale = 1;
     let spacing = 1;
     let count = 0;
-    let ink = "#333";
+    let ink = "";
 
     const setup = () => {
       const parent = canvas.parentElement;
