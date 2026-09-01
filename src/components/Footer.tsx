@@ -11,7 +11,7 @@ export function Footer() {
         alt=""
         aria-hidden
         loading="lazy"
-        className="pointer-events-none absolute bottom-0 -right-6 z-0 w-[28rem] max-w-none rotate-6 opacity-[0.16] mix-blend-multiply invert select-none dark:opacity-[0.22] dark:mix-blend-screen dark:invert-0 sm:-right-10 sm:w-[40rem] lg:-right-16 lg:w-[52rem]"
+        className="pointer-events-none absolute bottom-0 -right-4 z-0 w-[18rem] max-w-none rotate-6 opacity-[0.16] mix-blend-multiply invert select-none dark:opacity-[0.22] dark:mix-blend-screen dark:invert-0 sm:-right-6 sm:w-[24rem] lg:-right-10 lg:w-[32rem]"
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-10 sm:px-6 lg:px-8">
