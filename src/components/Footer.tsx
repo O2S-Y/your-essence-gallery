@@ -4,7 +4,7 @@ const currentYear = "2026";
 
 export function Footer() {
   return (
-    <footer className="relative z-10 flex min-h-[28rem] flex-col overflow-hidden border-t border-border bg-card sm:min-h-[40rem] lg:min-h-[48rem]">
+    <footer className="relative z-10 flex min-h-[22rem] flex-col overflow-hidden border-t border-border bg-card sm:min-h-[28rem] lg:min-h-[32rem]">
       {/* origami crane layered behind the Oussama wordmark */}
       <img
         src={footerCrane.url}
