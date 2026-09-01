@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
+import { OrizuruBar } from "../components/OrizuruBar";
 import {
   Download,
   Mail,
