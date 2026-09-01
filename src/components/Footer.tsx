@@ -5,13 +5,13 @@ const currentYear = "2026";
 export function Footer() {
   return (
     <footer className="relative z-10 flex min-h-[28rem] flex-col overflow-hidden border-t border-border bg-card sm:min-h-[40rem] lg:min-h-[48rem]">
-      {/* origami crane stuck to the footer background */}
+      {/* origami crane layered behind the Oussama wordmark */}
       <img
         src={footerCrane.url}
         alt=""
         aria-hidden
         loading="lazy"
-        className="pointer-events-none absolute bottom-0 -right-4 w-[20rem] max-w-none rotate-12 opacity-[0.12] mix-blend-multiply invert select-none dark:opacity-[0.18] dark:mix-blend-screen dark:invert-0 sm:-right-8 sm:w-[32rem] lg:-right-12 lg:w-[40rem]"
+        className="pointer-events-none absolute bottom-0 -right-6 z-0 w-[28rem] max-w-none rotate-6 opacity-[0.16] mix-blend-multiply invert select-none dark:opacity-[0.22] dark:mix-blend-screen dark:invert-0 sm:-right-10 sm:w-[40rem] lg:-right-16 lg:w-[52rem]"
       />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-10 sm:px-6 lg:px-8">
