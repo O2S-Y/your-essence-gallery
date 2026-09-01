@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
+import { OrizuruBar } from "../components/OrizuruBar";
 import {
   Download,
   Mail,
@@ -125,9 +126,15 @@ function HeroAbout() {
           <BauhausAbout />
         </div>
       </div>
+
+      {/* animated ascii origami bar along the bottom of the hero */}
+      <div className="relative -mt-2 border-t border-border/50 pb-2">
+        <OrizuruBar height={72} />
+      </div>
     </section>
   );
 }
+
 
 function BauhausAbout() {
   // Sage & Cream mapped Bauhaus palette
