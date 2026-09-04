@@ -1,20 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
+import { useEffect } from "react";
 import { OrizuruBar } from "../components/OrizuruBar";
 import {
   Download,
   Mail,
   ArrowRight,
-  ExternalLink,
-  Linkedin,
-  Github,
-  Send,
-  
   BookOpen,
   Briefcase,
 } from "lucide-react";
@@ -24,9 +14,7 @@ import {
   skillCategories,
   education,
   experience,
-
 } from "@/data/portfolio";
-import { submitContactMessage } from "@/lib/contact.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
