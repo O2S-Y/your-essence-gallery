@@ -1,30 +1,77 @@
-import footerCrane from "../assets/footer-crane.png.asset.json";
+import { ArrowUpRight } from "lucide-react";
+import { profile } from "@/data/portfolio";
 
 const currentYear = "2026";
 
 export function Footer() {
   return (
-    <footer className="relative z-10 flex min-h-[8rem] flex-col overflow-hidden border-t border-border bg-card sm:min-h-[9rem] lg:min-h-[10rem]">
-      {/* origami crane layered behind the Oussama wordmark */}
-      <img
-        src={footerCrane.url}
-        alt=""
-        aria-hidden
-        loading="lazy"
-        className="pointer-events-none absolute bottom-0 -right-2 z-0 w-[10rem] max-w-none rotate-6 opacity-[0.14] mix-blend-multiply invert select-none dark:opacity-[0.20] dark:mix-blend-screen dark:invert-0 sm:-right-4 sm:w-[14rem] lg:-right-6 lg:w-[18rem]"
-      />
+    <footer id="contact" className="relative z-10 border-t border-border bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <div className="mx-auto max-w-7xl">
+        {/* Section label */}
+        <p className="mb-6 font-body text-[11px] uppercase tracking-[0.2em] text-muted-foreground sm:mb-8">
+          Get in touch
+        </p>
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-3 sm:px-6 lg:px-8">
-        <div className="relative z-10 mt-2 overflow-hidden select-none sm:mt-3">
-          <p
-            className="font-display italic leading-[0.8] tracking-tight whitespace-nowrap text-muted-foreground/60"
-            style={{ fontSize: "clamp(2.5rem, 8vw, 6rem)", marginLeft: "-0.04em" }}
-          >
-            Oussama
-          </p>
+        {/* Big CTA headline */}
+        <a
+          href={`mailto:${profile.email}`}
+          className="group inline-flex w-full flex-col items-start gap-1 leading-[0.85] tracking-tight sm:flex-row sm:items-baseline sm:gap-4"
+        >
+          <span className="font-heading text-[clamp(3.5rem,12vw,9rem)] font-bold text-foreground">
+            Say hi!
+          </span>
+          <span className="relative inline-flex items-center gap-2 font-heading text-[clamp(3.5rem,12vw,9rem)] font-bold text-primary transition-colors duration-300 group-hover:text-primary/80">
+            Let’s talk
+            <ArrowUpRight
+              className="h-[0.5em] w-[0.5em] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+              strokeWidth={2.5}
+            />
+          </span>
+        </a>
+
+        {/* Divider line */}
+        <div className="mt-6 h-px w-full bg-border sm:mt-8" />
+
+        {/* Contact details & social links */}
+        <div className="mt-8 flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
+          <div className="space-y-2 font-body text-sm text-muted-foreground">
+            <a
+              href={`mailto:${profile.email}`}
+              className="block transition-colors hover:text-foreground"
+            >
+              {profile.email}
+            </a>
+            <p>{profile.location}</p>
+          </div>
+
+          <div className="flex flex-wrap gap-x-6 gap-y-2 font-body text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+            <a
+              href={`mailto:${profile.email}`}
+              className="transition-colors hover:text-foreground"
+            >
+              Email
+            </a>
+            <a
+              href={profile.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-foreground"
+            >
+              LinkedIn
+            </a>
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-foreground"
+            >
+              GitHub
+            </a>
+          </div>
         </div>
 
-        <div className="flex flex-1 items-center justify-center pb-4">
+        {/* Copyright */}
+        <div className="mt-12 flex justify-center border-t border-border pt-6 sm:mt-16">
           <p className="text-center font-body text-[11px] text-muted-foreground">
             © {currentYear} Oussama Yinssi. All rights reserved.
           </p>
