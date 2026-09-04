@@ -15,12 +15,12 @@ export function Footer() {
         {/* Big CTA headline */}
         <a
           href={`mailto:${profile.email}`}
-          className="group inline-flex w-full flex-col items-start gap-1 leading-[0.85] tracking-tight sm:flex-row sm:items-baseline sm:gap-4"
+          className="group inline-flex w-full flex-col items-start leading-[0.85] tracking-tight sm:flex-row sm:items-baseline sm:gap-4"
         >
-          <span className="font-heading text-[clamp(3.5rem,12vw,9rem)] font-bold text-foreground">
+          <span className="whitespace-nowrap font-heading text-[clamp(3.5rem,12vw,9rem)] font-bold text-foreground">
             Say hi!
           </span>
-          <span className="relative inline-flex items-center gap-2 font-heading text-[clamp(3.5rem,12vw,9rem)] font-bold text-primary transition-colors duration-300 group-hover:text-primary/80">
+          <span className="relative inline-flex items-center gap-2 whitespace-nowrap font-heading text-[clamp(3.5rem,12vw,9rem)] font-bold text-primary transition-colors duration-300 group-hover:text-primary/80">
             Let’s talk
             <ArrowUpRight
               className="h-[0.5em] w-[0.5em] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
