@@ -1,10 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
 import { OrizuruBar } from "../components/OrizuruBar";
 import {
   Download,
@@ -13,7 +8,6 @@ import {
   ExternalLink,
   Linkedin,
   Github,
-  Send,
   
   BookOpen,
   Briefcase,
@@ -26,7 +20,6 @@ import {
   experience,
 
 } from "@/data/portfolio";
-import { submitContactMessage } from "@/lib/contact.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -585,33 +578,7 @@ function ResumeRow({
 
 /* ---------------- Contact ---------------- */
 
-const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-type ContactFormData = z.infer<typeof contactSchema>;
-
 function ContactSection() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactFormData>({ resolver: zodResolver(contactSchema) });
-
-  const submitFn = useServerFn(submitContactMessage);
-
-  const onSubmit = async (data: ContactFormData) => {
-    try {
-      await submitFn({ data });
-      toast.success("Message sent! I'll get back to you soon.");
-      reset();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Something went wrong.");
-    }
-  };
-
   return (
     <section id="contact" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -621,10 +588,10 @@ function ContactSection() {
 
         <a
           href={`mailto:${profile.email}?subject=Hello%20Oussama`}
-          className="group mt-4 block font-display leading-[0.92] tracking-tight text-foreground transition-colors hover:text-primary [font-size:clamp(2.75rem,10vw,7rem)]"
+          className="group mt-4 block font-display leading-[0.92] tracking-tight text-foreground [font-size:clamp(2.75rem,10vw,7rem)]"
         >
           <span className="block">Say hi!</span>
-          <span className="block">
+          <span className="block transition-colors group-hover:text-primary">
             Let&apos;s talk{" "}
             <span className="inline-block transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">
               ↗
@@ -632,8 +599,8 @@ function ContactSection() {
           </span>
         </a>
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
-          <div className="space-y-2 font-body text-sm text-muted-foreground">
+        <div className="mt-24 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1 font-body text-sm text-muted-foreground">
             <a
               href={`mailto:${profile.email}`}
               className="block transition-colors hover:text-primary"
@@ -641,84 +608,32 @@ function ContactSection() {
               {profile.email}
             </a>
             <p>{profile.location}</p>
-            <div className="flex flex-wrap gap-5 pt-4 font-body text-xs uppercase tracking-[0.2em]">
-              <a
-                href={`mailto:${profile.email}`}
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
-              >
-                <Mail className="h-3.5 w-3.5" /> Email
-              </a>
-              <a
-                href={profile.linkedIn}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
-              >
-                <Linkedin className="h-3.5 w-3.5" /> LinkedIn
-              </a>
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
-              >
-                <Github className="h-3.5 w-3.5" /> GitHub
-              </a>
-            </div>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div>
-              <input
-                id="name"
-                type="text"
-                placeholder="Your name"
-                aria-label="Name"
-                {...register("name")}
-                className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
-              )}
-            </div>
-
-            <div>
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                aria-label="Email"
-                {...register("email")}
-                className="w-full border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <textarea
-                id="message"
-                rows={4}
-                placeholder="Tell me about your project or question..."
-                aria-label="Message"
-                {...register("message")}
-                className="w-full resize-none border-0 border-b border-border bg-transparent px-0 py-3 font-body text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none"
-              />
-              {errors.message && (
-                <p className="mt-1 text-sm text-destructive">{errors.message.message}</p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-body text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+          <div className="flex flex-wrap gap-6 font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <a
+              href={`mailto:${profile.email}`}
+              className="transition-colors hover:text-primary"
             >
-              <Send className="h-4 w-4" />
-              {isSubmitting ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+              Email
+            </a>
+            <a
+              href={profile.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-primary"
+            >
+              LinkedIn
+            </a>
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-primary"
+            >
+              GitHub
+            </a>
+          </div>
         </div>
       </div>
     </section>
