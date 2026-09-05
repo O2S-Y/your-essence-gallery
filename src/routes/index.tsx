@@ -313,7 +313,7 @@ function ProjectsSection() {
 function SkillsSection() {
 
   return (
-    <section id="skills" className="relative z-10 py-24">
+    <section id="skills" className="relative z-10 pt-24 pb-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           My story
@@ -580,7 +580,7 @@ function ResumeRow({
 
 function ContactSection() {
   return (
-    <section id="contact" className="relative z-10 py-24">
+    <section id="contact" className="relative z-10 pt-14 pb-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="font-body text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Get in touch
@@ -599,7 +599,7 @@ function ContactSection() {
           </span>
         </a>
 
-        <div className="mt-24 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mt-16 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-1 font-body text-sm text-muted-foreground">
             <a
               href={`mailto:${profile.email}`}
