@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OrizuruBar } from "../components/OrizuruBar";
 import {
   Download,
@@ -599,42 +599,6 @@ function ContactSection() {
           </span>
         </a>
 
-        <div className="mt-16 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-1 font-body text-sm text-muted-foreground">
-            <a
-              href={`mailto:${profile.email}`}
-              className="block transition-colors hover:text-primary"
-            >
-              {profile.email}
-            </a>
-            <p>{profile.location}</p>
-          </div>
-
-          <div className="flex flex-wrap gap-6 font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <a
-              href={`mailto:${profile.email}`}
-              className="transition-colors hover:text-primary"
-            >
-              Email
-            </a>
-            <a
-              href={profile.linkedIn}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-primary"
-            >
-              LinkedIn
-            </a>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-primary"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
