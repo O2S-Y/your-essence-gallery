@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OrizuruBar } from "../components/OrizuruBar";
 import {
   Download,
@@ -215,9 +215,79 @@ function BauhausAbout() {
   );
 }
 
-/* ---------------- Projects (editorial rows) ---------------- */
+/* ---------------- Projects (hand-drawn road) ---------------- */
+
+const INITIAL_VISIBLE = 2;
+const ROW_H = 340;
+
+function roadPath(w: number, rowH: number, rows: number, off = 0) {
+  if (!w || !rowH || !rows) return "";
+  let d = "";
+  for (let i = 0; i < rows; i++) {
+    const y = i * rowH + rowH / 2 + off;
+    const even = i % 2 === 0;
+    const sx = even ? w * 0.44 : w * 0.56;
+    const ex = even ? w * 0.98 : w * 0.02;
+    if (i === 0) d += `M ${sx.toFixed(1)},${y.toFixed(1)}`;
+    d += ` L ${ex.toFixed(1)},${y.toFixed(1)}`;
+    if (i < rows - 1) {
+      const ny = (i + 1) * rowH + rowH / 2 + off;
+      const nsx = even ? w * 0.56 : w * 0.44;
+      const bulge = even ? w * 0.05 : -w * 0.05;
+      d += ` C ${(ex + bulge).toFixed(1)},${y.toFixed(1)} ${(ex + bulge).toFixed(1)},${ny.toFixed(1)} ${nsx.toFixed(1)},${ny.toFixed(1)}`;
+    }
+  }
+  const lastY = (rows - 1) * rowH + rowH / 2 + off;
+  const lastEx = (rows - 1) % 2 === 0 ? w * 0.98 : w * 0.02;
+  d += ` C ${lastEx.toFixed(1)},${(lastY + rowH * 0.35).toFixed(1)} ${(w * 0.5).toFixed(1)},${(lastY + rowH * 0.3).toFixed(1)} ${(w * 0.5).toFixed(1)},${(lastY + rowH * 0.5).toFixed(1)}`;
+  return d;
+}
 
 function ProjectsSection() {
+  const [expanded, setExpanded] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [progress, setProgress] = useState(0);
+
+  const visible = expanded ? projects : projects.slice(0, INITIAL_VISIBLE);
+  const rows = visible.length;
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [rows]);
+
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setProgress(1);
+      return;
+    }
+    const onScroll = () => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const p = (window.innerHeight * 0.85 - r.top) / Math.max(1, r.height * 0.7);
+      setProgress(Math.max(0, Math.min(1, p)));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [rows]);
+
+  const rowH = rows ? size.h / rows : 0;
+
   return (
     <section id="projects" className="relative z-10 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -228,85 +298,151 @@ function ProjectsSection() {
           Work
         </h2>
 
-        <div className="mt-10 space-y-6">
+        <div ref={wrapRef} className="relative mt-12">
+          {/* hand-drawn road threading through the cards */}
+          <svg
+            aria-hidden="true"
+            viewBox={`0 0 ${size.w || 1} ${size.h || 1}`}
+            className="pointer-events-none absolute inset-0 hidden h-full w-full overflow-visible text-primary/70 md:block"
+          >
+            {[-6, 0, 6].map((off, i) => (
+              <path
+                key={off}
+                d={roadPath(size.w, rowH, rows, off)}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={i === 1 ? 2 : 1.2}
+                strokeOpacity={i === 1 ? 0.9 : 0.4}
+                strokeLinecap="round"
+                strokeDasharray={i === 1 ? undefined : "10 12"}
+                pathLength={1}
+                style={{
+                  strokeDasharray: i === 1 ? 1 : undefined,
+                  strokeDashoffset: i === 1 ? 1 - progress : undefined,
+                  opacity: i === 1 ? 1 : progress > 0.15 ? 1 : 0,
+                  transition: "opacity 600ms ease-out",
+                }}
+              />
+            ))}
+          </svg>
 
-          {projects.map((project, index) => (
-            <article
-              key={project.slug}
-              className="group relative grid grid-cols-1 overflow-hidden rounded-sm bg-secondary/50 transition-colors hover:bg-secondary md:grid-cols-2"
-            >
-              {/* stitched cord that draws itself around the card on hover */}
-              <svg
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 z-10 h-full w-full text-primary"
-                preserveAspectRatio="none"
+          {visible.map((project, index) => {
+            const cardLeft = index % 2 === 0;
+            return (
+              <div
+                key={project.slug}
+                className="relative grid grid-cols-1 items-center gap-6 py-6 md:grid-cols-2 md:gap-10 md:py-0"
+                style={{ minHeight: undefined }}
               >
-                <rect
-                  x="6"
-                  y="6"
-                  width="calc(100% - 12px)"
-                  height="calc(100% - 12px)"
-                  rx="2"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeDasharray="8 10"
-                  pathLength={100}
-                  strokeDashoffset={0}
-                  className="[stroke-dasharray:2_98] [transition:stroke-dasharray_900ms_ease-out,opacity_300ms] opacity-0 group-hover:opacity-100 group-hover:[stroke-dasharray:6_6]"
-                />
-              </svg>
-
-              <div className="flex flex-col justify-center p-7 sm:p-10">
-                <p
-                  className="font-heading text-3xl font-bold leading-none text-foreground/80"
-                  style={{
-                    textShadow:
-                      "1px 1px 0 color-mix(in oklab, var(--primary) 55%, transparent), -1px -1px 0 color-mix(in oklab, var(--background) 80%, transparent), 0 2px 3px color-mix(in oklab, var(--charcoal) 25%, transparent)",
-                    letterSpacing: "0.04em",
-                  }}
+                <div
+                  className={`${cardLeft ? "md:order-1" : "md:order-2"} flex md:h-[${ROW_H}px] md:items-center`}
+                  style={{ height: undefined }}
                 >
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <h3 className="mt-5 font-heading text-2xl font-bold leading-snug text-foreground sm:text-3xl">
-                  {project.title}
-                </h3>
-                <p className="mt-5 max-w-md font-body text-sm leading-relaxed text-muted-foreground">
-                  {project.outcomes[0]}
-                </p>
-                <div className="mt-8 flex items-center gap-5">
-                  <Link
-                    to="/projects/$slug"
-                    params={{ slug: project.slug }}
-                    className="inline-flex items-center gap-1 font-body text-sm font-medium text-primary transition-colors hover:text-primary/80"
-                  >
-                    View case study
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
+                  <ProjectCard project={project} index={index} />
+                </div>
+                <div
+                  className={`${cardLeft ? "md:order-2" : "md:order-1"} hidden items-center md:flex ${
+                    cardLeft ? "md:justify-start md:pl-6" : "md:justify-end md:pr-6"
+                  }`}
+                >
+                  <span className="font-body text-sm uppercase tracking-[0.25em] text-muted-foreground">
+                    <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full border border-current text-[10px]">
+                      {index + 1}
+                    </span>
+                    Project
+                  </span>
                 </div>
               </div>
+            );
+          })}
 
-              <div
-                className="relative min-h-[220px] overflow-hidden md:min-h-[320px]"
-                style={{
-                  background:
-                    "linear-gradient(135deg, var(--sage-400), var(--sage-700))",
-                }}
+          {projects.length > INITIAL_VISIBLE && (
+            <div className="mt-4 flex justify-center md:mt-10">
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                className="font-body text-sm uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:text-primary"
               >
-                <span className="absolute -bottom-10 -right-4 font-heading text-[11rem] font-bold leading-none text-background/25">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="absolute left-8 top-8 h-24 w-24 rounded-full bg-background/20" />
-                <span className="absolute bottom-10 left-16 h-16 w-40 rounded-t-full bg-background/15" />
-              </div>
-            </article>
-          ))}
-
+                {expanded ? "view less" : "view more"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
 }
+
+function ProjectCard({
+  project,
+  index,
+}: {
+  project: (typeof projects)[number];
+  index: number;
+}) {
+  return (
+    <article className="group relative w-full overflow-hidden rounded-sm bg-secondary/50 transition-colors hover:bg-secondary">
+      {/* stitched cord that draws itself around the card on hover */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 h-full w-full text-primary"
+        preserveAspectRatio="none"
+      >
+        <rect
+          x="6"
+          y="6"
+          width="calc(100% - 12px)"
+          height="calc(100% - 12px)"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeDasharray="8 10"
+          pathLength={100}
+          strokeDashoffset={0}
+          className="[stroke-dasharray:2_98] [transition:stroke-dasharray_900ms_ease-out,opacity_300ms] opacity-0 group-hover:opacity-100 group-hover:[stroke-dasharray:6_6]"
+        />
+      </svg>
+
+      <div className="flex flex-col justify-center p-7 sm:p-9">
+        <p
+          className="font-heading text-3xl font-bold leading-none text-foreground/80"
+          style={{
+            textShadow:
+              "1px 1px 0 color-mix(in oklab, var(--primary) 55%, transparent), -1px -1px 0 color-mix(in oklab, var(--background) 80%, transparent), 0 2px 3px color-mix(in oklab, var(--charcoal) 25%, transparent)",
+            letterSpacing: "0.04em",
+          }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </p>
+        <h3 className="mt-4 font-heading text-2xl font-bold leading-snug text-foreground">
+          {project.title}
+        </h3>
+        <p className="mt-4 font-body text-sm leading-relaxed text-muted-foreground">
+          {project.outcomes[0]}
+        </p>
+        <div className="mt-6">
+          <Link
+            to="/projects/$slug"
+            params={{ slug: project.slug }}
+            className="inline-flex items-center gap-1 font-body text-sm font-medium text-primary transition-colors hover:text-primary/80"
+          >
+            View case study
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      </div>
+
+      <div
+        className="h-3 w-full"
+        style={{
+          background: "linear-gradient(90deg, var(--sage-400), var(--sage-700))",
+        }}
+      />
+    </article>
+  );
+}
+
 
 /* ---------------- Skills / Resume (editorial, no cards) ---------------- */
 
@@ -599,42 +735,6 @@ function ContactSection() {
           </span>
         </a>
 
-        <div className="mt-16 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-1 font-body text-sm text-muted-foreground">
-            <a
-              href={`mailto:${profile.email}`}
-              className="block transition-colors hover:text-primary"
-            >
-              {profile.email}
-            </a>
-            <p>{profile.location}</p>
-          </div>
-
-          <div className="flex flex-wrap gap-6 font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <a
-              href={`mailto:${profile.email}`}
-              className="transition-colors hover:text-primary"
-            >
-              Email
-            </a>
-            <a
-              href={profile.linkedIn}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-primary"
-            >
-              LinkedIn
-            </a>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-primary"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
